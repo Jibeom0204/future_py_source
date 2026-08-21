@@ -7,6 +7,7 @@ def a()로 선언하고
 
 """
 import math #모듈  
+
 a=2 #전역변수
 print('a값: ',a) #실행문
 
@@ -16,7 +17,9 @@ def func(): #함수
 class TestClass:  #클래스의 Header 소문자로 써도 됨->그러나 대문자로 하는게 사회적 합의
 
     ## 아래로는 클래스의 Body
-    aa=1 #멤버변수 #멤버에서만 사용가능?(Y/N) #현재 클래스 내에서 전역변수
+    aa=1 #멤버변수
+        #클래스 이름으로 직접 접근: TestClass.aa
+        #객체(인스턴스)를 통해 접근: test.aa
 
     def __init__(self): #특별 메서드 #메소드의 첫 인자(parameter)는 "반드시" "self"
         print("__init__(self):==생성자==객체 생성시 가장 먼저 1회만 호출 - 초기화담당")
@@ -33,23 +36,24 @@ class TestClass:  #클래스의 Header 소문자로 써도 됨->그러나 대문
         #메서드는 행위
 print()
 print(TestClass) #<class '__main__.TestClass'>
+# "__main__"에 저장된 'TestClass'라는 사용자가 선언한 클래스 이름
 print()
 
+# ★★ 클래스 이름으로 직접 접근: TestClass.aa ★★
 print('클래스 멤버 a ==',TestClass.aa) #클래스 멤버 a:1
 # TestClass.showMessage #만들때 오류 안남->런타임에러 ##만들 때 에러남=신텍스 에러
 # #이렇게 안만든다
 
 print()
-test = TestClass() # 생성자 호출 => instance를 하다 => Object(객체)가 만들어진다
-# 맨 처음 실행해서 def_-init__을 호출한다
-# TestClass() 하면 def __init__(self) 실행됨
-# 클래스 생성자를 이용해 객체 생성후 해당 객체의 주소를 객체변수에 치환
-# test에 TestClass의 주소를 저장
+test = TestClass() # 핵심: test에 TestClass의 주소를 저장
+# 생성자 호출 => instance를 하다 => test라는 Object(객체)가 만들어진다
+# 맨 처음 실행해서 def_-init__을 호출한다 == TestClass() 하면 def __init__(self) 실행됨
+# 클래스 생성자를 이용해 객체 생성 후 해당 객체의 주소를 객체변수에 치환 =TestClass의 주소를 test에 저장
+
 print('클래스 멤버 a: ',test.aa)
-# print(f'test.showMessage()의 결과 출력 == ',test.showMessage())
+# print(f'test.showMessage()의 결과 출력 == ',{test.showMessage()})
 
 print()
-
 # Bound Method call - 자동으로 인수로 들어가는 방식
 test.showMessage()
 #위에서 만들어진 test가 ()안에 자동으로 들어감 -> test가 메소드의 인수로 담겨 호출됨
