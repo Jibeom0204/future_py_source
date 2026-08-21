@@ -6,7 +6,7 @@ def a()로 선언하고
 실제 실행은 a() 하는거랑 비슷한가?
 
 """
-import math #모듈
+import math #모듈  
 a=2 #전역변수
 print('a값: ',a) #실행문
 

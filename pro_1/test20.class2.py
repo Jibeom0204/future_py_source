@@ -99,3 +99,4 @@ print()
 print("'원형 클래스 공유멤버 handle 2로 수정하고 car1.handle, car2.handle 출력'")
 print('car1 speed: ', car1.printHandle()) #2
 print('car2 speed: ', car2.printHandle()) #2
+
