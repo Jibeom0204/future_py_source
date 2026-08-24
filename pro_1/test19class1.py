@@ -41,25 +41,36 @@ print()
 
 # ★★ 클래스 이름으로 직접 접근: TestClass.aa ★★
 print('클래스 멤버 a ==',TestClass.aa) #클래스 멤버 a:1
+# AI 설명
+# TestClass.aa (클래스를 통한 직접 접근)
+# TestClass의 네임스페이스(메모리 공간)에 저장된 클래스 변수 aa를 직접 조회합니다.
+
 # TestClass.showMessage #만들때 오류 안남->런타임에러 ##만들 때 에러남=신텍스 에러
 # #이렇게 안만든다
-
+#################################################################
 print()
 test = TestClass() # 핵심: test에 TestClass의 주소를 저장
 # 생성자 호출 => instance를 하다 => test라는 Object(객체)가 만들어진다
 # 맨 처음 실행해서 def_-init__을 호출한다 == TestClass() 하면 def __init__(self) 실행됨
 # 클래스 생성자를 이용해 객체 생성 후 해당 객체의 주소를 객체변수에 치환 =TestClass의 주소를 test에 저장
 
-print('클래스 멤버 a: ',test.aa)
-# print(f'test.showMessage()의 결과 출력 == ',{test.showMessage()})
+print('인스턴스를 통해 접근한 클래스 멤버 a: ',test.aa)
+# test.aa (인스턴스를 통한 접근)
+# AI 설명:
+# 파이썬은 먼저 인스턴스 test의 자체 네임스페이스(test.__dict__)에서 aa를 찾습니다.
+# 인스턴스 내부에 aa가 없으면, 상위인 TestClass의 네임스페이스로 올라가 클래스 변수 aa를 찾아 값을 반환합니다(속성 탐색 체인).
+#################################################################
 
 print()
 # Bound Method call - 자동으로 인수로 들어가는 방식
+print('test.showMessage(): ')
 test.showMessage()
 #위에서 만들어진 test가 ()안에 자동으로 들어감 -> test가 메소드의 인수로 담겨 호출됨
 #로직은 test.showMessage(test) 이런 형식임. 실제로 이러면 안됨 두번 호출해서 오류남
 
 # UnBound Method call - 주소를 다른 곳에 저장해서 직접 저장
+print()
+print('TestClass.showMessage(test)')
 TestClass.showMessage(test)
 #39줄 주석과 달리 이거는 가능 왜냐? 43번 줄에서 test=TestClass()를 통해 test에 주소가 생겼기 때문  
 #그럼에도 이렇게 쓰지는 않음
