@@ -7,7 +7,7 @@
 # class Singer:
 #     print("Singer 클래스 원형에서 나옴")
 #     print("")
-#     title_song = "애국가" #이게 필드라고?
+#     title_song = "애국가" #이게 필드라고? -> 필드: 객체나 클래스가 가지는 **데이터(속성, 상태값)**
 
 #     def sing(self):
 #         print("sing 함수에서 나옴")

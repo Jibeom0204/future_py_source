@@ -19,16 +19,18 @@ def abc():
     print('모듈의 멤버 함수')
 
 class My:
-    kor =80 # My클래스 멤버 변수 ('My'라는 type의 객체 공유자원)
+    kor =80 # My클래스 전역변수 = 클래스의 멤버 ('My'라는 type의 객체 공유자원)
 
     def abc(self):
         print('My 클래스 멤버 메서드 : ')
 
     def show(self):
-        # kor =77 # 메소드 내의 지역 변수
-        print(kor) #만약 윗줄의 kor를 주석하면 찾을 수 없어서 모듈의 멤버로 찾으러 감
+        # kor =77 # 메소드(클래스 안의 함수) 내의 지역 변수
+        print(kor) #만약 윗줄의 kor를 주석하면 찾을 수 없어서 모듈의 멤버로 찾으러 감 -> 22번줄 -> 11번줄 이런식으로 가나?
         # 지역 변수를 찾다가 없으면 모듈 멤버로 간다
-        print(self.kor) ##이거는 원래 myObj에서 찾아야 하는데 없음 -> 그럼 원형 가서 찾음
+        print(self.kor) 
+#AI: self는 현재 호출된 인스턴스인 myObj1을 가리킵니다. 먼저 myObj1의 인스턴스 딕셔너리(myObj1.__dict__)에서 kor 속성을 찾습니다.
+        ##이거는 원래 myObj에서 찾아야 하는데 없음 -> 그럼 원형 가서 찾음
         abc() # 모듈의 멤버인 abc()함수를 호출 #16줄로 감
         self.abc # 클래스의 abc인 23줄로 가서 호출
 
