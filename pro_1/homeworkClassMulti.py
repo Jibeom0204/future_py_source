@@ -7,7 +7,8 @@ class Animal: #최상위 클래스
         print("동물은 움직인다")
         print()
 
-class Dog(Animal): #Animal에서 move() 받아오기
+
+class Dog(Animal): #Animal에서 move() 오버라이드
     def __init__(self,name):
         print(f"나는 {name} 이다.")
         self.name=name
@@ -46,6 +47,8 @@ class Wolf(Dog, Cat):
         super().move()
         print()
 
+#        pass해놓으면 Dog로 바로 간다
+
 class Fox(Cat,Dog):
     def foxMethod(self):
         print("아리는 꼬리가 9개")
@@ -73,3 +76,11 @@ if __name__ =="__main__":
     c.showData()
     w.showData()
     f.showData()
+
+print()
+print("=======다형성 추가=======")
+ani =[d,c,w,f]
+for a in ani:
+    print(id(a))
+    a.move()
+    print()
