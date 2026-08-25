@@ -31,7 +31,7 @@ class Cat(Animal): #Animal에서 move() 받아오기
 
     def showData(self):
         print("==========고양이 소개하기==========")
-        print(self.name)
+        print(self.name) #print(self.name()) 이렇게 써서 TypeError: 'str' object is not callable 알람뜸 name()에서 ()지우기
         self.move()
         print()
 
