@@ -14,8 +14,37 @@ finally:
     오류 유무와 상관없이 처리할 구문(반드시 실행할 코드)
 """
 
-print("??")
+def divideFunc(a,b):
+    return a/b
 
 
-print("??")
-print("??")
+
+try:
+    #실행문 처리 블럭(오류 가능 영역)
+    #c=divideFunc(5,2)#지금은 정적으로 우리가 입력해 놓지만 실제로는 동적으로 다른 사용자들이 이상한 값을 넣었을 때 처리됨
+    # c=divideFunc(5,1)
+    # print(c)
+    # print('계속')
+    aa=[1,2]
+    print(aa[0])
+    #print(aa[3]) # 인덱스 에러가 발생하지만 예외처리 하지 않으면 인덱스 에러라고 표기되면서 프로그램이 끝남
+    #이거에 해당하는 except를 따로 처리해줘야함
+
+    #파일 읽기
+    open('c: /work/ok.txt')
+
+###보조기억장치에 저장할 때는 무조건 파일 단위
+
+except ZeroDivisionError:
+    #에러 발생 시 처리 영역
+    print('두번째 값은 0을주면 안돼요')
+except IndexError as err:
+    print('참조 범위 오류: ', err)
+except Exception as e: #발생한 일반적인 예외를 한버에 받아서 처리할 때 사용
+    # 여러 예외를 포괄적으로 처리
+    print('에러 : ', e)
+finally:
+    print('에러 유무에 상관없이 반드시 수행됨')
+
+print('프로그램 종료')
+
