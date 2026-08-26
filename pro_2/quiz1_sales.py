@@ -42,21 +42,46 @@ def sales():
     with open(r'sales.txt', mode='r',encoding='utf-8')as sales: #요구사항 1: sales.txt 파일을 읽는다.
 
        
-        list=sales.read() #파일의 모든 내용을 읽고, 읽은 파일의 내용을 list로 저장
-        print("읽은 리스트 출력: ",list) # 읽은거 출력해보기
+        #list=sales.read() #파일의 모든 내용을 읽고, 읽은 파일의 내용을 list로 저장
+        #print("읽은 리스트 출력: ",list) # 읽은거 출력해보기
 
-        # price=int(list[3])*int(list[4])# 요구사항 2: 각 판매금액을 수량 × 단가로 계산한다.
-        # emp=list[1]
-        # print(list.read())
+        list1=[]
+        for i in sales:
+            list1=i.split(",")
+            day=list1[0]
+            emp=list1[1]
+            product=list1[2]
+            amount=list1[3]
+            price=list1[4]  ## 이렇게 dict로 만드는게 맞나?
+            
+            #price=int(list[3])*int(list[4])
+            money=int(amount)*int(price)# 요구사항 2: 각 판매금액을 수량 × 단가로 계산한다.
+            total_money=0
+            print(list1)
 
-        for e in list:
-            date=list[0]
-            name=list[1]
-            product=list[2]
-            amount=list[3]
-            price=list[4]
-            money =amount*price
+            print("리스트 분할")
+            print(emp,"사원의 영업이익은 =", money)
+            print()
 
+        #print('밖에서 list 한번더 출력',list)
+        ##밖에서 list 한번더 출력 ['2026-08-04', '이영희', '모니터', '2', '250000']
+        ##한번만 나온다 -> for로 돌리면서 이름 같을 때 매출 더해야한다
+      
+            ## 이것도 날리기
+            # for k in list[1]:
+            #     if emp.startswith(list[1])==emp.startswith(list[1]):
+            #         total_money=money+money
+            # print('한사람당 전체 매출 합계 출력')
+            # print(total_money)
 
+            # for k in list:
+             #    if emp.startswith(list[1])==emp.startswith(list[1]):
+             #         total_money+=money
+             # print('한사람당 전체 매출 합계 출력')
+             # print(k)
+             # ## 한사람당 전체 매출 합계 출력 1200000  => 여러 날의 매출이 합계가 안됨 그냥 단일 품목 가격만 나옴 왜 그러지?
+                # ## 오히려 63번째 줄에는 하루 단위의 총 매출이 적힘 
+
+    
 if __name__ =='__main__':
     sales()
