@@ -190,6 +190,7 @@ print(f'var__closure__ 기능, 클로저 내부 확인:',var1.__closure__) #__�
 # # #형식  lamda 매개변수,..: 표현식 => rturn없이 결과 반환
 
 
+
 # # #일반 함수
 # # print("일반함수") #프로그램 종료시까지 메모리를 유지
 # # def hapf(x,y):

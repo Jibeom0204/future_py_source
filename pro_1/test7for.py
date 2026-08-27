@@ -1,7 +1,5 @@
 # a= {1,2,3,4,5,5,5,5,5,5}
-# b= (1,2,3,4,5,5,5,5,5,5)
-# c= [1,2,3,4,5,5,5,5,5,5]
-# for i in a,b,c:
+# for i in a:
 #     print(i, end = ' ')
 #     print()
 
@@ -203,20 +201,20 @@
 
 # print('\n\n')
 
-print('수열생성: range(start, stop, step)') #range(start, stop, step) 기본형식
-print(list(range(1,6))) #1 2 3 4 5
-print(list(range(1,6,1))) #1로 start 6에서 stop, 1씩 증가하는 step
-print(list(range(1,6,2))) #1로 start 6에서 stop, 2씩 증가하는 step
-print(tuple(range(1,6,2))) #맨 앞에 형식 적어주기, 얘는 튜플, 1로 start 6에서 stop, 2씩 증가하는 step
-print(set(range(1,6,2))) #맨 앞에 형식 적어주기, 얘는 셋, 1로 start 6에서 stop, 2씩 증가하는 step
-print(set(range(0,6,2)))
-print(set(range(0,6,1)))#초기값 안주면 1로 시작 0 1 2 3 4 5 
-print(set(range(6))) #목적지만 주기 0 1 2 3 4 5 위에거랑 같은 의미
-print()
-print("유형별로 봐보기 리스트,튜플,셋 순서")
-print(f'리스트_대괄호: ',list(range(-10,-100,-20)))
-print(f'튜플_소괄호: ', tuple(range(-10,-100,-20)))
-print(f'셋_중괄호: ',set(range(-10,-100,-20)))
+# print('수열생성: range(start, stop, step)') #range(start, stop, step) 기본형식
+# print(list(range(1,6))) #1 2 3 4 5
+# print(list(range(1,6,1))) #1로 start 6에서 stop, 1씩 증가하는 step
+# print(list(range(1,6,2))) #1로 start 6에서 stop, 2씩 증가하는 step
+# print(tuple(range(1,6,2))) #맨 앞에 형식 적어주기, 얘는 튜플, 1로 start 6에서 stop, 2씩 증가하는 step
+# print(set(range(1,6,2))) #맨 앞에 형식 적어주기, 얘는 셋, 1로 start 6에서 stop, 2씩 증가하는 step
+# print(set(range(0,6,2)))
+# print(set(range(0,6,1)))#초기값 안주면 1로 시작 0 1 2 3 4 5 
+# print(set(range(6))) #목적지만 주기 0 1 2 3 4 5 위에거랑 같은 의미
+# print()
+# print("유형별로 봐보기 리스트,튜플,셋 순서")
+# print(f'리스트_대괄호: ',list(range(-10,-100,-20)))
+# print(f'튜플_소괄호: ', tuple(range(-10,-100,-20)))
+# print(f'셋_중괄호: ',set(range(-10,-100,-20)))
 
 # print('\n\n')
 
@@ -260,3 +258,17 @@ print(f'셋_중괄호: ',set(range(-10,-100,-20)))
 #           hap =i+j
 #           if hap%4==0:
 #                print(i,j)
+
+
+
+
+# print("1~10까지 정수 합")
+# tot = 0
+# for i in range(1,11):
+#      tot +=i
+#      print('tot: ',tot)
+#      print('tot: ',tot, '',sum(range(1,11)))#sum내장함수->for문을 편하게 해주는 함수, 그러나 원리는 알아야함
+# print()
+# for i in range(1,10):
+#      print(f'2 *{i}={2*i}')
+

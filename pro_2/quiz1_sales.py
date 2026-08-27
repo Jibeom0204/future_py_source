@@ -49,9 +49,10 @@ def sales():
         for i in sales:
             list1=i.split(",")
             day=list1[0]
+
             emp=list1[1]
             product=list1[2]
-            amount=list1[3]
+            amount=list1[3]  ##수정 포인트: 실제 파일은 문자열로 저장되어있으니  int 타입으로 바꾸기 58번줄에서 해도 무관한가?
             price=list1[4]  ## 이렇게 dict로 만드는게 맞나?
             
             #price=int(list[3])*int(list[4])
