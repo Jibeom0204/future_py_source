@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+
+    <h2>html 기본 이해</h2>
+    Tag : 문서 구조와 형태를 표현하는 명령어로 <>안에 키워드를 적음<br/>
+    html은 head와 body를 포함함. 명령어를 열였으면 닫아야함. 겹치면 안됨<br/>
+
+    br 쓸거면 br /br 이렇게 닫아야 하는데 br/이렇게 써도 됨<br/>
+    aaa   bbb      ccc html안에서 여러칸을 띄워도 브라우저에서는 한칸만 떨어짐<br/><br/>
+    여러칸 뜨의고 싶으면 & nbsp;, & lt; & gt;로 써야함<br/>
+    aaa&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bbb&lt;ccc&gt;<br/></br/>
+
+
+    -- 출력 형태에 따른 태그 종류 --<br/>
+    1) Block 방식: 행 분리가 자동으로 이루어짐 - p, h, div, ol, il... <br/>
+    2) Inline 방식: 같은 행에 계속 출력 - b, i, span...<br/>
+
+
+    <hr> 이거는 줄나누기
+    <p>문단나누기</p>
+    <p><b>문단</b> <strong>나누기2</strong> b는 볼드체, strong으로도 가능</p> 
+    <i>이텔리체로 표시</i> 
+    작업 계속 -> i는 같은 행에 계속 출력되서 이 구문은 br을 만나기전에 계속 같은해엥 출력
+    <!-- 주석-->
+
+    <h1>h1: 표제용 문으로 가장 큼.  라인 스킵과 볼드 기능이 내장되어 있음</h1>
+    <h6>h6: 표제용 문으로 가장 작음</h6>
+    <div>div: 구역 설정 태그(행 전체) 이것도 자동행 분리 </div> good 이것도 자동 행 분리
+    <span>span: 구역 설정 태그(일부 영역만)</span> ??
+
+    <div style= "background-color:darkkhaki; "> 이 내용에 색깔 칠해짐(div니까 행 전체)</div>
+    <section style="background-color: burlywood;"> section은 시맨틱 태그(행 전체) div랑 같은 기능</section>
+    <span style="background-color: aquamarine;">span  구역 설정 태그(일부영역만)</span>
+    <hr size="10" width="300" color="blue">hr: tag에 고유속성부여</br>
+
+    <pre>
+        pre: 내가 어떤 형 식 으로
+        입력 하던 그결 <b>과 대로</b> 보인다</pre>
+        <br>
+        -- 목록태그</br>
+
+        <ul>
+            <li>ul은 동그라미 태그 걸어주는거</li>
+            <li>li는 단독으로 사용 불가! 무조건 ul 혹은 ol과 같이써야함!</li>
+        </ul>
+
+        <ol>
+            <li>ol은 숫자 표기, 넘버링 해줌</li>
+            <li>행마다 번호 부여</li>
+        </ol>
+
+</body>
+</html>

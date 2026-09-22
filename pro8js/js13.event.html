@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>event</title>
+    <script>
+        function func1(){
+            document.getElementById("show").innerHTML = "<i>전통적인 이벤트처리</i>"  } //HTML이라 tag가 작동됨
+
+        let a =10;
+        let b = {
+            funcNew1:function(){
+                document.getElementById("show").innerHTML = "b객체의 메소드 처리";
+                
+            },
+            funcNew2:function(){
+                document.getElementById("show").innerHTML = "<h1>너의 이름은.</h1>";
+                
+            }
+        }
+        //일반 변수 선언하듯이 함수도 객체로 선언할수 있다
+    </script>
+    <hr>hr로 구분됨<br>
+
+
+    <script>
+        //html문서와 이미지, css같은 페이지 리소스가 모두 로딩된 후 자동 발생 이벤트
+        //window.onload = alert("ok"); //요청 로딩이 발생하면 알람이 간다
+        window.onload = function() {
+    // btn1
+    const exBtn1 = document.getElementById("btn1");
+    exBtn1.onclick = bt1Func;
+
+    // btn2, btn3 처리
+    const exBtn2 = document.getElementsByName("myBtn");
+    
+    // 클릭 2 (배열의 첫 번째 요소)
+    exBtn2[0].onclick = function() {
+        document.getElementById("show").innerHTML = "<h2>클릭 2 누름</h2>";
+    }
+    
+    // 클릭 3 (배열의 두 번째 요소)
+    exBtn2[1].onclick = function() {
+        document.getElementById("show").innerHTML = "<h2>클릭 3 누름</h2>";
+    }
+
+    // btn4 처리
+    const exBtn4 = document.getElementsByTagName("button")[3];
+    
+    // exBtn4[0]이 아닌 exBtn4 객체 자체에 직접 onclick 지정
+    exBtn4.onclick = function() {
+        document.getElementById("show").innerHTML = "클릭 4 선택";
+    }
+
+    // 이벤트 연결 및 해제_addEventListner("이벤트 종류",핸들러 함수)
+    document.getElementById("btn5").addEventListener("click",abcFunc) // 클릭하면 abc함수 연결
+}
+
+function bt1Func() {
+    document.getElementById("show").innerHTML = "클릭1 선택 와우";
+}
+
+function abcFunc(){
+    //alert("abc 함수 실행")
+    document.getElementById("show").innerHTML = "클릭5 이벤트 연결처리"; 
+    document.getElementById("btn5").removeEventListener("click",abcFunc)//연결된 이벤트 해제
+}
+    </script>
+</head>
+
+<body>
+<h2>이벤트 처리: 이벤트 핸들러 연결</h2>
+<input type="button" value="버튼1" onclick="func1()"><br>
+<input type="button" value="버튼2" onclick="b.funcNew1()"><br>    
+<input type="button" value="버튼3" onclick="b.funcNew2()"><br><!--이 방식 비권장-->
+<hr><hr> 
+<!--
+<button id ="btn1" onclick="이벤트처리함수()">라벨</button> 이건 html 내에 js 기술 w3c는 비권장
+-->
+<button id="btn1">클릭1</button><br>
+<button id="btn2" name="myBtn">클릭2</button><br>
+<button id="btn3" name="myBtn">클릭3</button><br>
+<button id="btn4">클릭4</button><br>
+<button id="btn5">클릭5</button><br>
+
+<div id="show"></div>
+
+</body>
+</html>

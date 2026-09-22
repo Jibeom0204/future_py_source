@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<script>
+    /*window.onload = () =>{ // 페이지 전체(html js 이미지 등) 로딩 완료 후
+        document.querySelector("btnSend").onclick=chkDataFunc;
+        document.querySelector("btnClear").onclick=clskFunc;
+    }*/
+
+    document.addEventListener("DOMContentLoaded",() => { //DOM 생성 완료(텍스트 파일들 먼저하고 이미지, 사운드는 천천히) 후
+        document.querySelector("#btnSend").onclick=chkDataFunc;
+        document.querySelector("#btnclear").onclick=clskFunc; // #btnclear 대소문자 수정 및 clskFunc 연결
+    })
+
+    function chkDataFunc(event){
+        //alert("a");
+        event.preventDefault(); // html 단의 submit 기능 죽이기
+
+        //입력 자료 오류 검사 - 아래 검사 후 이상이 없으면 서버로 자료 전송할거임
+        if(frm.name.value==="" || isNaN(frm.name.value)===false){
+            //isNaN("123") : false,isNaN("abc") : true -- 숫자가 아닌지 검사하기
+            frm.name.focus()
+            //이름창에 오류가 있을 때 이름 입력창에 자동으로 커서를 배치하는 기능_서비스 기능. 필수는 아님
+            alert("이름을 입력하시오. 문자만 허용");
+            return; //함수 탈출
+        }
+
+        if(frm.id.value.length <3){
+            frm.id.focus();
+            alert("id는 3글자 이상 입력하시오");
+            return;
+        }
+
+        //정규표현식
+        let re_str = "13Abc가나다45김 ㅂwqㅇㅂㅈ916";
+        console.log(re_str.match(/[1]/)); // 문자열 앞부터 읽다가 패턴(숫자 1)과 일치하는 첫번째 요소 찾는 즉시 탐색을 종료
+        console.log(re_str.match(/[1]/g)); // g: global. 첫번째 항목 조건에 일치해도 전체 문자열 스캔- ['1','1']
+        console.log(re_str.match(/[0-9]/g)); //숫자만 출력하기  - ['1','2','3'..]
+        console.log(re_str.match(/\d/g)); //숫자만
+        console.log(re_str.match(/[0-9 ]+/g)); //숫자와 공백
+        console.log(re_str.match(/[가나]/g)); // 한글 "가", "나"만 출력
+        console.log(re_str.match(/[가-힣]+/g)); // 한글 연속적으로 출력
+        console.log(re_str.match(/\d{2}/g)); //숫자 2글자 묶음만 -> 12 59 75..
+        console.log(re_str.match(/\d{2,3}/g)); // 숫자 2글자 혹은 3글자만 12,123,99,441...
+
+        //email 입력 자료 검사
+        let email_regex=/[0-9a-zA-Z][_0-9a-zA-Z-]*@[_0-9a-zA-Z-]+(\.[_0-9a-zA-Z-]+){1,2}$/;
+        if(!frm.email.value.match(email_regex)){
+            frm.name.focus();
+            alert("email 형식이 어긋남");
+            return;
+        }
+
+        //나이
+        let age_regex=/^[0-9]{1,2}$/; // ^(시작을 의미) $(끝을 의미)
+        if(!frm.age.value.match(age_regex)){
+            frm.age.focus();
+            alert("나이는 숫자만 입력하세요");
+            return;
+        }
+        //alert("성공");
+        frm.action="my.py"; // 이 페이지 폼의 이름이 frm. 
+        frm.method="get"; //오류갸 없다면 my.py라는 서버에 get 방식으로
+        frm.submit(); // 제출하기. 개인정보라서 원래는 post가 나은방식
+    }
+
+    function clskFunc(){
+        alert("b");
+    }
+</script>
+
+</head>
+
+<body>
+<h2>고객자료 입력</h2>
+<!--<form name="frm" action="서버호출명" method="get">
+-->
+
+<form name="frm">
+    <table class="table table-dark table-hover">
+        <tr>
+            <td>이름</td>
+            <td><input type="text" name="name" id="name" value="홍길동"></td>
+        </tr>
+        <tr>
+            <td>아이디</td>
+            <td><input type="text" name="id" id="id" placeholder = "3글자 이상" value="good"></td>
+        </tr>
+        <tr>
+            <td>이메일</td>
+            <td><input type="email" name="email" id="email" value="abs@abc.com"></td>
+        </tr>
+        <tr>
+            <td>나이</td>
+            <td><input type="text" name="age" id="age"></td>
+        </tr>
+        <tr>
+            <td colspan="2" style ="text-align: center;">
+            <input type="submit" id="btnSend" value="자료 전송" class="btn btn-primary">
+            <input type="reset" id="btnclear" value="자료 삭제" class="btn btn-info">
+            </td>
+        </tr>
+    </table>
+    
+</form>
+</body>
+</html>

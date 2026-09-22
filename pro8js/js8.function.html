@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+
+
+<body>
+    <h3>JS의; 대화상자 관련 내장함수</h3>
+    <script>
+        let name= "홍길동";
+        let tel="111-1111";
+        alert("이름은"+name+"\n전화번호는"+tel); //메세지 대화상자 창
+        console.log("이름은"+name+"\n전화번호는"+tel);
+        document.write("<br>alert 함수 수행 후 계속")
+
+        let result = confirm("계속할까요?"); //선택창
+        document.write("<br>선택한 값은"+result); // true,false
+
+        let add=prompt("사는 곳 입력: ","서초동");
+        document.write("<br>사는 곳은" +add);
+
+
+
+</script>
+
+
+
+
+</body>
+</html>

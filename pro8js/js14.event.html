@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script>
+    //window.onload =function(){};
+    window.onload=() =>
+    {
+        //alert("A");
+        document.getElementById("colorB").onclick=function(){
+            document.body.style.backgroundColor="blue";
+        };
+        document.getElementById("colorG").onclick=function(){
+            document.body.style.backgroundColor="#00ff00";
+        };
+        document.getElementById("colorR").onclick=function(){
+            //document.bgColor="rgb(255,0,0)";
+            document.body.style.backgroundColor="rgb(255,0,0)"//최신방법
+        };
+
+        //이벤트 종류 경험
+        // 클릭 이벤트. 클래스 이름으로 호출
+        document.querySelector(".hello").onclick=() => { //hello클래스로 호출, 함수 파라미터 x
+            document.querySelector("#show").innerText="안녕하세요";
+        }
+
+        document.querySelector("#calc").ondblclick=() => {
+            let ss=`백틱 결과는 ${10+20}`;
+            document.querySelector("#show").innerText=ss;
+        }
+
+        document.querySelector("#name").onmouseover=() => {
+            document.querySelector("#show").innerHTML="<h2>키미노나마에와</h2>";
+        }
+        document.querySelector("#name").onmouseout=() => {
+            document.querySelector("#show").innerHTML="x";
+        }
+
+
+        //a 태그: click 이벤트 기본 장착
+        document.querySelector("#daum").onclick = function(event) //evnet 관련 정보를 알고 싶으면 괄호에 적기
+        //꼭 event라고 안적어도 된다 accient이렇게 적어도 됨
+        {
+            event.preventDefault();// 해당 태그의 고유 기능(a tag, submit, reset ..)삭제
+            console.log(event);
+            document.title= "새로운 제목"
+        }
+
+
+        //select    
+        const sdata=document.querySelector("#sel");
+        /*sdata.onclick=function(){ // 항목 선택시 이벤트 발생
+            document.querySelector("#show").innerHTML = sdata.value;
+            console.log(sdata.value)
+        }*/
+        sdata.onchange = function(){
+            document.querySelector("#show").innerHTML = sdata.value;
+            console.log(sdata.value)
+        }
+    }
+    </script>
+
+
+</head>
+
+
+<body>
+    여러 이벤트 경험하기 </br>
+    <input type="button" value="파랑" id="colorB">
+    <!--<input type="button" value="초록" id="colorG">
+    <input type="button" value="빨강" id="colorR">
+    주석처리하고 다른 방식-->
+    <span id="colorG">초록</span>
+    <b id="colorR" style="border: 2px solid black; cursor: pointer;">빨강</b>
+    <hr>
+
+    <h2>이벤트 종류 경험하기</h2>
+    <button id="hello" class="hello">인사하기(click)</button>
+    <button id="calc">계산하기(dbl click)</button>
+    <button id="name">이름확인(mouseover)</button>
+    <br><br>
+
+    <a href=" https://m.daum.net" id="daum"> a(앵커)태그 클릭</a>
+
+    <br><hr>
+    <select id ='sel'>
+    <option value="프로그래머">프로그래머</option>
+    <option value="웹퍼플리셔">웹퍼블리셔</option>
+    <option value="프로게이머">프로게이머</option>
+    </select>
+
+    <br><br><hr>
+    <div id="show">출력장소</div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+/* 별도의 CSS 파일을 만들어 두면 여러개의 HTML 문서에서 스타일 적용가능*/
+#myid2{
+    background-color: yellow;
+    color: red;
+    font-size: 20px;
+}
+
+/*동적 선택자*/
+input:focus{background-color: green;}
+input:focus{background-color: rgb(9, 49, 74);}
+/*input:focus{background-color: #91a275;}*/
+
+/*a 태그와 관련된 것*/
+a:link{text-decoration: none;} /*밑줄 제거*/
+a:hover{color: orange; font-size: 30px;}
+
+/*b tag 부모 자식 자손 클래스*/
+b{font-size: 5px;}
+div b{font-size : 12px;}/*div tag 자손들 모두 해당. div 안에 모든 B 적용  */
+div > b{font-size: 20px; color: blue;}/*div tag의 직계자식*/
+div b#hi{font-size: 30px; color:red}
+div b.hello{font-size: 40; color: green;}

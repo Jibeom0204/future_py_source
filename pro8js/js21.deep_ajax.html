@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+     <!-- axiois cdn-->
+     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        window.onload =() =>{ //헤드 태그에 사용하려면 window.onload 사용해야함
+                                // body 단에 사용할 때는 안써도 됨
+        //window.onload는 웹페이지의 모든 리소스(HTML, 이미지, CSS 등)가 다 불러와진 뒤에 실행할 함수를 지정하는 이벤트 핸들러
+        document.querySelector("#btn1").onclick=funAsync;
+        document.querySelector("#btn2").onclick=funAxios; 
+        }
+       
+    
+    // 공통 출력 함수
+    function showSangpums(data, title){
+        let output = `<h3>${title} </h3>`;
+        output +=`<table boarder="1">`;
+
+            output +=`<tr> <th>코드</th> <th>품명</th> <th>수량</th> <th>단가</th> <th>금액</th></tr>`;
+            
+            let total =0;
+
+            data.forEach(item =>{
+                let price = item.su * item.dan;
+                total += price;
+                output +=`
+                <tr>
+                    <td>${item.code}</td>
+                    <td>${item.sang}</td>
+                    <td>${item.su}</td>
+                    <td>${item.dan.toLocaleString()}</td> //3자리 마다 콤마 찍기
+                    <td>${price.toLocaleString()}</td>
+                </tr>
+                    `;
+            });
+            output +=`
+                <tr>
+                    <td colspan="4">총 금액: </td>
+                    <td><b>${total.toLocaleString()}원</b></td>    
+                </tr>
+            `;
+        output +=`</table>`;
+        document.querySelector("#result").innerHTML=output;
+        // output은 let으로 선언된 하나의 문자열 변수일 뿐이고, +=는 "기존 문자열 뒤에 새 문자열을 이어붙인다"는 의미
+        // 계속 사용가능
+        // let output = "A";          // output = "A"
+        //      output += "B";       // output = "AB"
+        //      output += "C";       // output = "ABC"
+    }
+    //1. Async
+    async function funAsync() {
+        const result = document.querySelector("#result");
+        result.innerHTML="데이터를 불러오는 중...";
+        try{
+            const response = await fetch("sangpum.py");
+
+            if(!response.ok){
+                throw new Error(`http 오류: ${response.status}`);
+                // throw: 이 지점에서 강제로 오류하나를 발생시켜라
+                //코드 자체는 문법적으로 멀쩡한데,
+                // "이 상황은 논리적으로 문제가 있다"고 개발자가 직접 판단해서
+                // 인위적으로 에러를 만들어냄
+            }
+
+            const data = await response.json(); //JSON 객체화
+            if(!Array.isArray(data)){
+
+                // isArray : 어떤 값이 배열인지 아닌지를 true/false로 검사해주는 함수
+                // Array.isArray([1,2,3]);      // true  (배열 맞음)
+                // Array.isArray({a:1});        // false (객체지 배열 아님)
+                // Array.isArray("hello");      // false (문자열)
+                // Array.isArray(null);         // false
+                
+                throw new Error(`JSON 데이터가 배열의 형식이 아님`);
+            }
+            // 재고가 있는 상품만 선택
+            const stockData=data.filter(item =>item.su>0); // 문자열 json data를 item이라는 변수에 담음
+        
+            // 코드순으로 오름차순정렬
+            stockData.sort((a,b) => a.code-b.code); //??
+            console.log("정렬결과: ",stockData)
+            
+            // 출력함수 호출
+            showSangpums(stockData,"ASYNC FETCH 결과");
+        
+        }catch(error){
+            result.innerHTML="Async 에러 발생"+error.message;      
+        }finally{
+            console.log("fetch 작업 종류")
+        }
+    }
+
+    //2 Axios: JSON 데이터 자동변환
+    async function funAxios() {
+        const result = document.querySelector("#result");
+        result.innerHTML ="데이터를 불러오는 중...";
+
+        try{
+            const response =await axios.get("sangpum.py",{
+                timeout:3000 //3초 안에 응답 안오면 요청을 실패처리해라
+            })
+            console.log("axios Response: ",response);
+            const data=response.data;
+
+            if(!Array.isArray(data)){ // isArray : 배열 여부 확인. 사용 방법 확인
+                throw new Error(`JSON 데이터가 배열의 형식이 아님`);
+                //throw는 뭐임
+            }
+            // 재고가 있는 상품만 선택
+            const stockData=data.filter(item =>item.su>0); // 문자열 json data를 item이라는 변수에 담음
+
+            // 출력함수 호출
+            showSangpums(stockData,"Axios 결과");
+
+        }catch(error){//error: 에러가 난 정보를 담을 변수의 이름. 다른거 써도 ok
+            result.innerHTML="Axios 에러 발생"+error.message;      
+        }finally{
+            console.log("fetch 작업 종려")
+        }
+    }
+    </script>
+
+</head>
+
+<body>
+    <h3>보다 더실무적인 AJAX 처리</h3>
+    <button id="btn1"1>1번: async fetch</button>
+    <button id="btn2"2>2번: axios library</button>
+    <hr><hr>
+    <div id="result"></div>
+</body>
+</html>

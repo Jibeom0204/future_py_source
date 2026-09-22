@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <!-- axiois cdn-->
+     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+     <style>
+        .man{color: yellow;}
+        .woman{color: blue;}
+    </style>
+    
+    <script>
+        window.onload =() =>{ 
+        document.querySelector("#btn").onclick=()=>{
+            const id = document.querySelector("#id").value;
+            const pwd = document.querySelector("#pwd").value;
+            if(id!=="python"||pwd!=123){
+            document.querySelector("#result").innerHTML="아이디와 비밀번호가 일치하지 않음"
+            }
+            else{
+                document.querySelector("#result").innerHTML="로그인 성공"
+                funAxios();
+            }
+        }; 
+        
+        //페이지 호출이 다 끝나면 #btn이라는 속성을 가진 HTML을 반환
+        }
+
+
+    //출력함수
+    function  showGogek(g_information){
+        let output =`
+        
+        <tr>
+        <td>고객명</td>&nbsp;&nbsp;&nbsp; <td>고객전화</td>&nbsp;&nbsp;&nbsp; <td>성별</td>
+        </tr>`
+        
+        g_information.forEach(g => {
+            const colorClass = g.gender === "남" ? "man" : "woman";
+        
+        output+=`
+        <tr>
+        <td class="${colorClass}">${g.name}</td>&nbsp;&nbsp;&nbsp;
+        
+        <td>${g.tel}</td>&nbsp;&nbsp;&nbsp;
+        
+        <td>${g.gender}</td>&nbsp;&nbsp;&nbsp;
+        </tr>`
+        });
+
+        
+        
+        const print=`<table border="1">${output}</table>`;
+        document.querySelector("#gogek").innerHTML=print
+        //document.querySelector("#gogek")는 HTML 문서에서 id="gogek"인 요소(<div id="gogek"></div>)를 찾아서 그 요소 자체(DOM 객체)를 반환
+        ;
+
+
+    }
+
+    //Axios
+    async function funAxios() {
+        //아이디,비번 입력단
+        
+
+        const gogek = document.querySelector("#gogek");
+        gogek.innerHTML ="고객 데이터를 불러오는 중...";
+
+        try{
+            const a =await axios.get("quiz_gogek.json")//고객json 파일을 불러와 a에 저장. 알아서 json으로 저장
+            console.log("axios결과",a)
+            
+            const gogek_info=a.data; // a객채의 data를 확인?
+            showGogek(gogek_info) //gogek_info에 저장된 정보를 인자로 넘겨 showGogek함수를 호출
+        
+        }
+        catch(err){//try 블록 안에서 에러가 발생했을 때 작동
+            //err: 에러의 대한 정보를 담을 변수
+            gogek.innerHTML="Axios 에러 발생"+err.message;
+            
+        }
+        finally{   
+            console.log("작업 종료")
+        }
+        
+    }
+    </script>
+        
+      
+</head>
+<body>
+    <h2>직원 정보 입력</h2>
+    <table>
+    <!--<form> 태그의 원래 목적은 버튼을 눌렀을 때 페이지 전체를 새로고침하면서
+        서버로 데이터를 전송하는 것. action과 method-"get" 혹은"post"   -->
+    <tr>
+        <td>ID</td>
+        <td><input type="text" name="id" id="id"><td>
+    </tr>
+
+    <tr>
+        <td>PW</td>
+        <td><input type="password" name="pwd" id="pwd"></td>
+    </tr>
+
+    <hr>
+    </table>
+    <button id="btn">고객관리출력</button>
+    <div id="gogek"></div> <!-- id가 show인 거 출력?-->
+    <div id="result"></div>
+    ID: python &nbsp;&nbsp;&nbsp; PW:123
+</body>
+</html>

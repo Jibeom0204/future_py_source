@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2><i>*변수연습*</i></h2>
+    <script>
+        //var aa; // 옛날 버전 자바스크립트에서 사용하던 변수 선언 방식
+        //var aa; //?함수 단위 선언. 같은 이름으로 재선언 가능
+        let aa; // 현재 사용하는 변수 선언 방식. EcmaScript 형식에 기반함.
+        //let aa;//블록 단위. 같은 이름으로 재선언 불가능
+        aa=100;
+
+        let bb=20.5; //이렇게도 변수 선언과 동시에 초기화 가능
+        const cc=300; //cc를 상수로 선언 값 변경 불가
+        bb=bb+10 //가능
+        //cc=cc+10; //불가능
+        document.write(aa);
+        document.write("<br>")
+        document.write(aa, " ",bb, " ", cc);
+        document.write("<br>")
+
+        let dd =false //boolen 타입  
+        let msg = "변수 선언 이해" // 문자열 기억
+        document.write("<br>")
+        document.write(dd, " ",msg);
+        document.write("<br><br>")
+        document.write("타입 확인: ",typeof(aa),"  ",typeof(bb),"  ",typeof(cc),"  ",typeof(dd),"  ",typeof(msg));
+        document.write("<br>")
+        document.write("타입 확인: ",typeof(1),"  ",typeof(-1.5),"  ",typeof(true),"  ",
+        typeof(null),"  ",typeof('안녕'),"  ",typeof(undefined));
+        
+        document.write("<br><br>")
+        //참조형(참조타입) 변수 => 객체의 주소를 기억
+        let kbs ={name:"kbs방송"};
+        let mbc=kbs; // 주소를 치환한
+        document.write(kbs.name," ",mbc.name);
+
+        document.write("<br><br>")
+        {
+            // 변수 scope: 영향을 미치는 영역
+            // {} 중괄호 안의 영역은 독립적인 공간
+            let v1 = 1;
+            var kk = 50; // 호이스팅 발생 => 전역변수로 인식됨
+            document.write(v1,"<br>");
+            document.write(kk,"<br>")
+            {
+                let v2=2;
+                document.write(v2, " ", kk,"<br>")
+                {
+                    let v3= 3;
+                    document.write(v3," ", v1,"<br>") // v1도 호출 가능
+                }
+                //document.write(v3);//err v3 영역 밖에서 호출 불가
+                document.write(v1);// 여기서 v1은 호출 가능
+            }
+        }
+        //document.write(v1,kk)//이러는 것도 안된다는 뜻
+    </script><br><br>
+
+    <h2><i>*js연산자 연습*</i></h2>>
+
+    <script>
+        let x=5,y=2;
+        document.write(x," ",y,"<br>");
+        document.write("산술연산", x+y , " ", x-y, " ", x%y,"<br>");
+        document.write("관계연산(비교연산)", x>y," ",x<y , " ", x<=y," ",x==y,"<br>");
+        document.write("논리연산(&&:and,||:OR)", x>y&&x<y , " ", x>y||x<y,"<br>");
+        document.write("논리연산(&&:and,||:OR)",x," ",x=x+1," ",++x ,"<br>");
+        document.write("삼항연산 xy조건이 참이면 물음표 다음, 거짓이면 콜론 다음",(x>y)?1000:3+4,"<br>");
+        // 연산자 우선 순위는 파이썬과 동일함
+        document.write("a"+"b","77","<br>"); // 문자열 더하기
+
+        let e,n,g;
+        e=n=g=6+5; // 할당 연산 체이닝
+        document.write(e," ",n," ",g,"<br>") // 전부다 11이 나옴
+
+        //제어문
+    </script>
+</body>
+</html>

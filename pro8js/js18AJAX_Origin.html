@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajax</title>
+
+    <script>
+        window.onload =() =>{
+            document.querySelector("#btnGet").onclick=getFunc;
+            document.querySelector("#btnPost").onclick=postFunc;
+        }
+        let xhr;
+
+        function getFunc()
+        {
+            const name=frm.name.value;
+            const age=frm.age.value;
+            //alert(name+" "+age);
+
+            //  이 방식도가능
+            // xhr =new XMLHttpRequest();
+            // xhr.open("GET","js18.py",true) 
+
+            xhr =new XMLHttpRequest(); //전역변수 xhr. 비동기 처리를 가능하게함
+            // 브라우저에서 웹서버와 비동기 통신(Ajax)을 위한 객체 생성
+            let fname="js18.py?name"+name+"&age"+age; // "js18.py?name" 이거는 요청명이다. 파일의 이름이 아니다. 여기서는 요청명과 파일의 이름이 같을 뿐이다.
+            xhr.open("GET",fname,true)// true면 비동기. false는 동기
+            //웹서버에 만들어는 놨지만 HTML은 브라우저에서 파싱되어 실행됨
+            // js18.py서버단에 HTML을 넣으면 안된다. 왜?
+            
+            xhr.onreadystatechange=function(){//이름이 없는 1회용 함수
+                //alert(xhr.readyState); //0부터 4까지 출력. 4이면 통신 상태 양호. 이후 서버에 보내면 200,300,400 결과 반환
+                // if(xhr.readyState===4){
+                //     alert(xhr.status);
+                // }
+
+                if(xhr.readyState === 4 && xhr.status === 200){// 조건의 순서 매우 중요함. 앞에게 거짓이면 뒤에거 실행도 안한다. 앞에가 참이면 뒤에도 실행
+                    //웹 서버에 요청이 성공한 상태로 결과를 기다림
+                    process1();
+                }
+            }
+            xhr.send();
+            
+        }
+        function process1(){
+            //alert("ok");
+            //alert(xhr.responseText);
+            document.querySelector("#show").innerText=xhr.responseText;
+        }
+            
+         //////////////////////Get_Post 방식 구분///////////////////////////
+
+        function postFunc() //현재 환경에서는 실습 불가->live Server를 사용하기 때문. 방식은 이게 맞음
+        {
+            const name=frm.name.value;
+            const age=frm.age.value;
+            
+            xhr =new XMLHttpRequest(); // 비동기 처리
+            let fname="js18.py"; // post 방식에서는 여기서 값을 전송하지 않음
+            xhr.open("GET",fname,true)// true면 비동기. false는 동기
+            
+            xhr.onreadystatechange=function(){//이름이 없는 1회용 함수
+                if(xhr.readyState === 4 && xhr.status === 200){// 조건의 순서 매우 중요함. 앞에게 거짓이면 뒤에거 실행도 안한다. 앞에가 참이면 뒤에도 실행
+                    //웹 서버에 요청이 성공한 상태로 결과를 기다림
+                    process2();
+                }
+            }
+            xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+            xhr.send("name"+name+"&age="+age); //post 방식으로 작성된 처리 방식
+            // get과 post 방식 정리
+            // 실무에서는 이렇게 안하지만 이 방식이 오리지널 방식
+        }
+        function process2(){
+            document.querySelector("#show").innerText=xhr.responseText;
+        }
+
+
+    </script>
+</head>
+
+
+<body>
+    <h2>Ajax 이해</h2>
+    <form name="frm">
+    이름: <input type="text" name="name" value="tom"><br>
+    나이: <input type="text" name="age" value="31"><br>
+    <input type="button" value="get방식" id="btnGet"><br>
+    <input type="button" value="post방식" id="btnPost"><br>
+    </form>
+    <hr>
+    <div id="show"></div> <!-- id가 show인 거 출력?-->
+</body>
+</html>

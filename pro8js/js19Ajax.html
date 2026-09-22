@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        window.onload =() =>{
+            document.querySelector("#btn1").onclick=funcJson;
+            document.querySelector("#btn2").onclick=funcCSV;
+        }
+
+        function funcJson(){
+            let xhr=new XMLHttpRequest()
+            xhr.open("GET","sangpum.json",true);
+            xhr.onreadystatechange=function()
+            {
+                if(xhr.readyState===4&&xhr.status===200){
+                    //let data=xhr.responseText;
+                    //alert(typeof(data)); //string: js객체 모양을 가진 문자열
+
+                    //---------------------
+                    let data = JSON.parse(xhr.responseText);
+                    //alert(typeof(data));
+                    // //object: js객체 ->Json.parse로 자바스크립트 객체로 바꿔줌
+                    // json 파일의 형식을 띄고 있는 문자열이기 때문에 반복문 처리가 안된다
+                    //상품 json 을 위의 코드에서 객체로 만들고 열고 -> 이걸 자바스크립트 객체로 만들어줌? 이게 맞나?
+                    //---------------------
+
+                    let output="JSON 반환결과<br>";
+                    output+="코드 &nbsp;&nbsp;&nbsp;품명";
+                    for(let i=0; i<data.length;i++)
+                    {
+                        output+=data[i].code+"&nbsp;&nbsp;&nbsp;"+ data[i].sang+"<br>"
+                    }
+
+
+                    document.querySelector("#result").innerHTML=output;
+                    //document.querySelector("#result").innerText=data;
+                }
+                else{
+                    document.querySelector("#result").innerText="로딩 실패:"+xhr.status;
+                }
+            }
+            xhr.send()
+        }
+        /////////////////////////////////////////////////
+        function funcCSV(){
+            let xhr=new XMLHttpRequest()
+            xhr.open("GET","sangpum.csv",true);
+            xhr.onreadystatechange=function()
+            {
+                if(xhr.readyState===4&&xhr.status===200){
+                    let data=xhr.responseText.trim(); // 문자열 앞뒤 공백제거
+                    //alert(data);
+                    let lines= data.split("\n") //csv 파일을 data로 받고 data 내 문자열을 행단위로 자름
+
+                    let output="CSV 반환결과<br>";
+                   
+                    for(let i=0; i<lines.length;i++)
+                    {
+                       if(lines[i] !== ""){ //10,핸드크림
+                        let parts = lines[i].split(",");
+                        let code = parts[0];
+                        let sang = parts[1]; // 배열 잘라서 저장하는 로직흐름 블로그 정리
+                        output+="코드는" + code +", 상품명은" + sang + "<br>"
+                       }
+                    }
+
+
+                    document.querySelector("#result").innerText=output;
+                    //document.querySelector("#result").innerText=data;
+                }
+                else{
+                    document.querySelector("#result").innerText="로딩 실패:"+xhr.status;
+                }
+            }
+            xhr.send()
+
+        }
+    </script>
+
+</head>
+
+
+
+
+<body>
+    <h3>Ajax 전통적 방법으로 처리</h3>
+    <button id="btn1">Json 문서 읽기</button>
+    <button id="btn2">CSV 문서 읽기</button>
+    <hr>
+    <div id="result">출력</div>
+</body>
+</html>

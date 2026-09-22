@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<script>
+    function objTest(){
+        let str="";
+
+        //1.  new Objcet를 이용한 객체 생성
+        let person1=new Object();
+        // 속성: 멤버 필드(변수),상수 함수 등..
+        person1.name="고길동";
+        person1.age=33;
+        person1.addr="서울";
+
+        //속성: 멤버 메서드_클래스 내에 선언된 함수
+        person1.info=function(){
+            return `${this.name}님의 나이는,${this.age}살, 사는 곳은${this.addr}`
+        }//파이썬에서는 self, js에서는 this
+        str +="<h3>1. new Object()를 사용</h3>";
+        str +=`이름: ${person1.name}<br>`; // 멤버 필드(변수) 호출
+        str +=`나이: ${person1.age}<br>`; // 멤버 필드(변수) 호출
+        str +=`주소: ${person1.addr}<br>`; // 멤버 필드(변수) 호출
+        str +=`info 메소드: ${person1.info()}<br>`; // 멤버 메서드 호출
+
+
+        //2. 생성자 함수를 이용한 객체 생성_파이썬 느낌
+        function Person(name,age,addr){
+            // 멤버 필드
+            this.name=name;
+            this.age=age;
+            this.addr=addr;
+
+            //메서드
+            this.info=function(){
+                return `${this.name}님의 나이는,${this.age}세, 거주지는${this.addr}`
+            }
+
+        }
+        let person2 =new Person("마이콜",30,"원주")
+        str +="<hr>";
+        str +="<h3>2. 생성자를 사용</h3>";
+        str +=`이름: ${person2.name}<br>`; // 멤버 필드(변수) 호출
+        str +=`나이: ${person2.age}<br>`; // 멤버 필드(변수) 호출
+        str +=`주소: ${person2.addr}<br>`; // 멤버 필드(변수) 호출
+        str +=`info 메소드: ${person2.info()}<br>`; // 멤버 메서드 호출
+
+
+        //3. 객체 Literal 이용한 객체 생성
+        let person3={
+            // 멤버 필드
+            name:"존메이어",
+            age:47,
+            addr:"미국",
+
+            //멤버 메서드
+            info:function(){
+                
+                return `${this.name}님의 나이는:,${this.age}세: 거주지는${this.addr}`;
+            }
+        
+        }
+        str +="<hr>";
+        str +="<h3>3. Literal를 사용</h3>";
+        str +=`이름: ${person3.name}<br>`; // 멤버 필드(변수) 호출
+        str +=`나이: ${person3.age}<br>`; // 멤버 필드(변수) 호출
+        str +=`주소: ${person3.addr}<br>`; // 멤버 필드(변수) 호출
+        str +=`info 메소드: ${person3.info()}<br>`; // 멤버 메서드 호출
+
+        document.getElementById("disp").innerHTML=str;
+    }
+
+</script>
+
+</head>
+<body>
+    <pre>
+        클래스는 객체를 만들기 위한 설계도이고 객체는 클래스를 이용해 실제로 생성한 데이터이다
+        자바스크립트에서 class객체를 가장 쉽게 이해하느방법은 설꼐도와 실제물건으로 보는것이다
+        class -> 설계도
+        object - > 설계도 만든 실제 대상  
+    </pre>
+    <h2>JS객체 생성 방법 주요 3가지</h2>
+    <button onclick="objTest()">객체 생성 및 출력</button>
+    <br>
+    <div id="disp"></div>
+</body>
+</html>

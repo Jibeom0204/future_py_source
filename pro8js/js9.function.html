@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <pre>
+        ES6부터는 화살표 함수(arrow fucntion)라는 새로운 문법 방식으로 함수를 만들 수 있게 되었다
+        화살표 함수는  =>"> 기호를 사용하여  함수 키워드를 생략한다
+            힘수 표현식 보다 단순한 문법으로 함수처리가 가능해진다
+            형식: let 변수 =(매개변수 1,...) => {표현식}
+    </pre>
+    <br>
+    <hr><hr><br>
+
+    <script>
+        //참고 Use strict는 자바 스크립트를 엄격모드(strict mode)로 실행하도록 하는 선언문
+        'use strict';
+
+        let a =10;
+        console.log(a);
+        // <script type ="module"> 하면 use strict ; 자동 적용됨
+    
+        function hap1(a,b) //함수의 이름 존재
+        {
+            return a+b;
+        }
+        document.write("hap1 함수출력: ", hap1(3,4),"<br>");
+
+
+        //함수의 이름이 존재하니까
+        let niceFunc=hap1; //다른 변수의 값에 주소를 치환할 수 있음
+        document.write("hap1 주소를 치환한 nice 함수출력: ", niceFunc(1,7),"<br>");
+
+
+        let hap2 = function(a,b) // 함수의 이름 존재 x
+        {
+            return a+b;
+        }
+        document.write("hap2 함수출력: ", hap2(5,7),"<br>");
+
+        let hap3 = (a,b) => a+b; // hap2의 함수를 화살표로 표현
+        document.write("화살함수로 함수출력: ", hap3(2,3),"<br>");
+        //리턴이 없음
+
+        let hap4 = (a,b) => {return a+b}; // hap2의 함수를 화살표로 표현
+        document.write("화살함수로 함수출력: ", hap4(9,8),"<br>");
+        //리턴을 주는 방식 {}안에 return
+
+
+        let double1=(n) => {return n*2} // double1 변수에 입력하는 n을 넘겨주고 n에 대해서 연산한 값으 저장
+        document.write("double1에 n값을 넣어{double(3)} 연산한 결과: ",`${double1(3)}`,"<br>");
+
+
+        let sayHi=() => document.write(`안녕하세요<br>`);
+        sayHi();
+
+        document.write("<hr><hr><hr><hr>");
+        let age =25;
+        let welcome = (age<30)?() => document.write(`안녕<br>`):document.write(`반가워<br>`)
+        // 삼항연산자 ? 조건이 참이면 :앞쪽 출력, 거짓이면 : 뒤쪽출력
+        document.write("Welcome함수 출력: ", welcome());
+        welcome();
+        
+
+        document.write("<hr>");
+        let sumFunc=(a,b) => //원래는 function sumFunc(a,b){..} 이렇게 적어야 하는 것
+        {
+            let result = a+b;
+            return result;
+        }
+        document.write(`두 수의 합은 ${sumFunc(5,6)}<br>`);
+
+        document.write("<hr>");
+        //사칙연산
+        let calFunc=(a,b,op) => //원래는 function sumFunc(a,b){..} 이렇게 적어야 하는 것
+        {
+            if(op==="+") return a+b; //부호가 더하기이면
+            else if(op==="-") return a-b;
+            else if(op==="*") return a*b;
+            else if(op==="/") return a/b;
+            else return 0;
+        };
+        document.write(`계산기 함수 calFunc값:  ${sumFunc(5,6,"/")}<br>`);
+        document.write(calFunc(10,5,"+"),"<br>");
+        document.write(calFunc(10,5,"*"),"<br>");
+        
+
+        document.write("<hr><hr>");
+        document.write("배열 고차 함수활용<br>");
+        // filter(): 조건에 맞는 데이터 추출
+        // map(): 데이터를 원하는 형태로 반환
+        // forEach(): 데이터를 하나씩 반복처리
+        const meet=[
+            {name:"돼지",pirce:400},//배열에 json 타입 넣기
+            {name:"소",pirce:300},
+            {name:"양",pirce:200},
+            {name:"닭",pirce:100}
+        ];
+        //가격이 200이상만 출력
+        const highpirce = meet.filter(meets => meets.pirce >=300);
+        document.write("highprice: ",highpirce);
+        console.log(highpirce);
+    </script>
+
+
+
+
+
+
+</body>
+</html>
