@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>get 방식 요청(요청명 또는 요청명?변수=값&변수=값  또는 form tag 사용)</h2>
+    방법1: <br>
+    <a href="/get_result?username=손오공&age=23">get으로 자료 전달</a><br>
+    
+    방법2:
+    <form action="get_result" method="get">
+        이름: <input type="text" name="username"><br>
+        나이: <input type="number" name="age"><br>
+        <input type="submit" value="전송"> <!-- submit 별로임. 버튼으로 보낸다음에 검증하고 맞으면 출력하는 방식
+        pro8 -> js19~ 확인할 것-->
+    </form>
+</body>
+</html>

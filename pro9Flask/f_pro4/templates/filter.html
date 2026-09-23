@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}필터{% endblock %}
+
+{% block content %}
+    m1,p1으로 받음
+    <h3>필터 옵션 사용</h3>
+    원본 메세지: {{m1}}<br>
+    대문자 메세지: {{m1|upper}}<br>
+    첫글자만 대문자 메세지: {{m1|capitalize}}<br>
+    단어별 첫글자 대문자 메세지: {{m1|title}}<br><br>
+
+    가격은 : {{p1|format}}
+{% endblock %}

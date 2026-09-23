@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}기본제목{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+   <header><!--div 대신 사용하는 공통 머리글-->
+    <h2>공통 상단 메뉴(머리글, Header)</h2>
+   </header>
+   <hr>
+   
+   {% block content %}
+   본문 내용
+   {% endblock %}
+
+   <hr>
+   <footer class ="bg-light text-center"><!--div 대신 사용하는 공통 머리글-->
+    <span class=""text-muted>작성자: 김공룡 &nbsp;&nbsp;&nbsp; (주)다이노소어&nbsp;&nbsp;&nbsp;&nbsp; ☏:02-0111010  </span>
+    </footer>
+</body>
+</html>
