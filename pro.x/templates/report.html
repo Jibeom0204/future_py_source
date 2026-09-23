@@ -1,0 +1,526 @@
+{% extends "base.html" %}
+{% block title %}웹 구조 보고서{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <div class="wrap topbar-inner">
+        <a class="brand" href="#top">웹 구조 보고서</a>
+        <nav class="toc" aria-label="목차">
+            <a href="#s1">1 구조</a>
+            <a href="#s2">2 통신</a>
+            <a href="#s3">3 HTML 처리</a>
+            <a href="#s4">4 실시간 확인</a>
+            <a href="#s5">5 요약</a>
+        </nav>
+        <span id="sse-status" class="pill">SSE 연결 중…</span>
+    </div>
+</div>
+
+<!-- ======================= 머리말: 서버(Jinja2)가 채운 값 ======================= -->
+<header class="hero" id="top">
+    <div class="wrap">
+        <p class="eyebrow">pro.x</p>
+        <h1>웹 클라이언트·서버 구조 정리</h1>
+        <p class="lead">클라이언트-서버 구조, 통신 방식, HTML 처리 방식을 정리하고
+            서버와 브라우저가 실제로 <b>언제, 어디서</b> 움직이는지 이 페이지에서 직접 확인한다.</p>
+        <dl class="meta">
+            <div><dt>서버 렌더링 시각</dt><dd>{{ rendered_at.strftime('%Y-%m-%d %H:%M:%S') }}</dd></div>
+            <div><dt>렌더링 번호</dt><dd>#{{ render_no }}</dd></div>
+            <div><dt>서버</dt><dd>{{ server.host }} · PID {{ server.pid }}</dd></div>
+            <div><dt>환경</dt><dd>Python {{ server.python }} · Flask {{ server.flask }}</dd></div>
+        </dl>
+        <p class="hint">위 값은 서버가 Jinja2로 채워서 보낸 것이다. 새로고침(F5)하면 서버가 HTML을 다시 만들기 때문에 시각과 렌더링 번호가 바뀐다.</p>
+    </div>
+</header>
+
+<main class="wrap">
+
+<!-- ======================= 1. 클라이언트-서버 구조 ======================= -->
+<section id="s1">
+    <h2><span class="num">1</span>클라이언트–서버 구조</h2>
+    <p class="section-lead">웹은 요청하는 쪽(클라이언트)과 응답하는 쪽(서버)이 HTTP라는 약속으로 대화하는 구조다.</p>
+
+    <div class="grid-3">
+        <article class="card concept">
+            <h3>클라이언트 · 브라우저</h3>
+            <p>요청을 보내는 쪽. 받은 HTML·CSS·JS를 해석해 화면을 그리고 JS를 실행한다.</p>
+            <p class="em">브라우저가 실행하는 언어는 JavaScript뿐. 파이썬 코드는 브라우저에 도착하지 않는다.</p>
+        </article>
+        <article class="card concept">
+            <h3>서버 · 웹 서버 / WAS</h3>
+            <p>요청을 기다렸다가(listen) 응답하는 쪽. 파일을 그대로 주거나(웹 서버) 프로그램을 실행해 결과를 만들어 준다(WAS).</p>
+            <p class="em">DB 접속, 비밀번호(.env) 같은 민감한 처리는 서버에서만 한다.</p>
+        </article>
+        <article class="card concept">
+            <h3>약속 · HTTP</h3>
+            <p>요청 1번에 응답 1번. 응답이 끝나면 서로를 기억하지 않는다(무상태, stateless).</p>
+            <p class="em">서버는 요청 없이 먼저 말을 걸 수 없다. 실시간이 필요하면 폴링 · SSE · WebSocket을 쓴다.</p>
+        </article>
+    </div>
+
+    <h3 class="sub">1-1. 요청과 응답의 흐름</h3>
+    <figure class="card diagram">
+        <div class="svg-scroll">
+        <svg viewBox="0 0 960 290" role="img" aria-label="브라우저, Flask 서버, MariaDB 사이의 요청과 응답 흐름">
+            <defs>
+                <marker id="ah-up" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ah up"/></marker>
+                <marker id="ah-down" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ah down"/></marker>
+                <marker id="ah-db" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ah db"/></marker>
+            </defs>
+
+            <rect class="d-box" x="10" y="20" width="260" height="250" rx="16"/>
+            <text class="d-title" x="140" y="54" text-anchor="middle">브라우저 (클라이언트)</text>
+            <g class="d-item" text-anchor="middle">
+                <rect x="30" y="72" width="220" height="38" rx="9"/><text x="140" y="96">HTML 파싱 → DOM</text>
+                <rect x="30" y="118" width="220" height="38" rx="9"/><text x="140" y="142">CSS → 스타일 계산</text>
+                <rect x="30" y="164" width="220" height="38" rx="9"/><text x="140" y="188">JS 실행 (이벤트 루프)</text>
+                <rect x="30" y="210" width="220" height="38" rx="9"/><text x="140" y="234">화면 그리기</text>
+            </g>
+
+            <rect class="d-box" x="390" y="20" width="260" height="250" rx="16"/>
+            <text class="d-title" x="520" y="54" text-anchor="middle">Flask 서버 (WAS)</text>
+            <g class="d-item" text-anchor="middle">
+                <rect x="410" y="72" width="220" height="38" rx="9"/><text x="520" y="96">@app.route 라우팅</text>
+                <rect x="410" y="118" width="220" height="38" rx="9"/><text x="520" y="142">뷰 함수 실행</text>
+                <rect x="410" y="164" width="220" height="38" rx="9"/><text x="520" y="188">render_template · jsonify</text>
+                <rect x="410" y="210" width="220" height="38" rx="9"/><text x="520" y="234">/static 파일 전송</text>
+            </g>
+
+            <rect class="d-box" x="770" y="85" width="180" height="120" rx="16"/>
+            <text class="d-title" x="860" y="138" text-anchor="middle">MariaDB</text>
+            <text class="d-sub" x="860" y="162" text-anchor="middle">SQL 처리 · 데이터 저장</text>
+
+            <line class="d-arrow up" x1="276" y1="108" x2="382" y2="108" marker-end="url(#ah-up)"/>
+            <text class="d-label" x="330" y="96" text-anchor="middle">① 요청</text>
+            <text class="d-sub" x="330" y="128" text-anchor="middle">GET · POST</text>
+            <line class="d-arrow down" x1="384" y1="190" x2="278" y2="190" marker-end="url(#ah-down)"/>
+            <text class="d-label" x="330" y="178" text-anchor="middle">④ 응답</text>
+            <text class="d-sub" x="330" y="210" text-anchor="middle">HTML · JSON</text>
+
+            <line class="d-arrow db" x1="656" y1="122" x2="762" y2="122" marker-end="url(#ah-db)"/>
+            <text class="d-label" x="710" y="110" text-anchor="middle">② SQL</text>
+            <line class="d-arrow db" x1="764" y1="170" x2="658" y2="170" marker-end="url(#ah-db)"/>
+            <text class="d-label" x="710" y="192" text-anchor="middle">③ 결과 행</text>
+        </svg>
+        </div>
+        <ol class="flow-steps">
+            <li>브라우저가 URL로 HTTP 요청을 보낸다 (주소창, 링크, form, fetch).</li>
+            <li>Flask가 경로에 맞는 뷰 함수를 찾아 실행하고, 필요하면 DB에 SQL을 보낸다.</li>
+            <li>DB 결과로 HTML(<code>render_template</code>)이나 JSON(<code>jsonify</code>)을 만든다.</li>
+            <li>브라우저가 응답을 받아 HTML을 파싱·렌더링하고 JS를 실행한다. JS가 다시 ①을 보내면 그것이 AJAX.</li>
+        </ol>
+    </figure>
+
+    <h3 class="sub">1-2. 실습 흐름으로 본 발전 과정</h3>
+    <div class="tbl">
+        <table class="wide">
+            <thead><tr><th>#</th><th>실습</th><th>주제</th><th>핵심 도구</th><th>서버가 하는 일</th><th>브라우저가 하는 일</th><th>포인트</th></tr></thead>
+            <tbody>
+            {% for s in d.STEPS %}
+                <tr{% if loop.last %} class="current"{% endif %}>
+                    <td class="n">{{ loop.index }}</td>
+                    <td><code>{{ s.folder }}</code></td>
+                    <td><b>{{ s.topic }}</b></td>
+                    <td>{{ s.tool }}</td>
+                    <td>{{ s.server }}</td>
+                    <td>{{ s.browser }}</td>
+                    <td>{{ s.point }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <p class="caption">이 표는 <code>report_data.py</code>의 <code>STEPS</code> 리스트를 템플릿의 <code>{% raw %}{% for %}{% endraw %}</code> 반복문으로 만든 것이다. 지금 보는 보고서 자체가 SSR 예시.</p>
+
+    <h3 class="sub">1-3. 웹 서버와 WAS</h3>
+    <div class="tbl">
+        <table>
+            <thead><tr><th>구분</th><th>하는 일</th><th>예</th><th>실습</th></tr></thead>
+            <tbody>
+            {% for t in d.SERVER_TYPES %}
+                <tr><td><b>{{ t.kind }}</b></td><td>{{ t.role }}</td><td>{{ t.examples }}</td><td><code>{{ t.here }}</code></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ======================= 2. 통신 방식 ======================= -->
+<section id="s2">
+    <h2><span class="num">2</span>통신 방식</h2>
+    <p class="section-lead">소켓이 바닥에서 bytes를 나르고, HTTP는 그 위에서 <b>어떤 형식으로 말할지</b>를 정한 약속이다.</p>
+
+    <h3 class="sub">2-1. 소켓 위의 HTTP</h3>
+    <div class="grid-2">
+        <div class="card">
+            <h4>TCP 소켓 <span class="tag-file">pro4network</span></h4>
+            <pre class="code">{{ d.CODE.socket }}</pre>
+            <p class="caption">연결을 맺고 bytes를 주고받을 뿐, 내용의 형식은 정해져 있지 않다.</p>
+        </div>
+        <div class="card">
+            <h4>HTTP 요청 <span class="tag-file">이 페이지를 요청할 때 서버가 받은 그대로</span></h4>
+            <pre class="code http"><span class="hl">{{ http_request.line }}</span>
+{% for k, v in http_request.headers %}<span class="hk">{{ k }}</span>: {{ v }}
+{% endfor %}
+<span class="muted">(↑ 헤더 끝의 빈 줄 · GET 요청이라 본문 없음)</span></pre>
+            <p class="caption">요청줄(메서드 · 경로 · 버전) → 헤더(이름: 값) → 빈 줄 → 본문. 서버가 받은 <code>request.headers</code>를 Jinja2 반복문으로 출력했다.</p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-head">
+            <h4>HTTP 응답 <span class="tag-file">브라우저가 받은 그대로</span></h4>
+            <button class="btn" id="btn-response" type="button">GET /api/time 보내고 응답 보기</button>
+        </div>
+        <pre class="code" id="http-response">버튼을 누르면 fetch로 요청하고, 브라우저가 받은 상태줄 · 헤더 · 본문을 여기에 표시한다.</pre>
+        <p class="caption">상태줄(버전 · 상태코드 · 문구) → 헤더 → 빈 줄 → 본문. fetch는 헤더 이름을 소문자로 보여준다.</p>
+    </div>
+
+    <h3 class="sub">2-2. GET과 POST</h3>
+    <div class="tbl">
+        <table>
+            <thead><tr><th>구분</th><th>GET</th><th>POST</th></tr></thead>
+            <tbody>
+            {% for label, get, post in d.GET_POST %}
+                {% set is_code = label in ('Flask에서 받기', 'CGI에서 받기', 'XHR 코드') %}
+                <tr>
+                    <td><b>{{ label }}</b></td>
+                    <td>{% if is_code %}<code>{{ get }}</code>{% else %}{{ get }}{% endif %}</td>
+                    <td>{% if is_code %}<code>{{ post }}</code>{% else %}{{ post }}{% endif %}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h3 class="sub">2-3. 자주 보는 상태 코드</h3>
+    <div class="tbl">
+        <table>
+            <thead><tr><th>코드</th><th>문구</th><th>의미</th><th>실습에서 만난 곳</th></tr></thead>
+            <tbody>
+            {% for code, text, meaning, where in d.STATUS_CODES %}
+                <tr><td><span class="sc sc{{ code[0] }}">{{ code }}</span></td><td>{{ text }}</td><td>{{ meaning }}</td><td><code>{{ where }}</code></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h3 class="sub">2-4. 브라우저가 요청을 보내는 방법</h3>
+    <div class="tbl">
+        <table>
+            <thead><tr><th>방법</th><th>메서드</th><th>화면</th><th>특징</th><th>실습</th></tr></thead>
+            <tbody>
+            {% for way, method, screen, feature, ex in d.CLIENT_REQUESTS %}
+                <tr>
+                    <td><b>{{ way }}</b></td>
+                    <td>{{ method }}</td>
+                    <td><span class="chip {{ 'full' if screen == '전체 교체' else 'part' }}">{{ screen }}</span></td>
+                    <td>{{ feature }}</td>
+                    <td><code>{{ ex }}</code></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <p class="caption">XHR의 readyState: 0 UNSENT → 1 OPENED(open 호출) → 2 HEADERS_RECEIVED → 3 LOADING → <b>4 DONE</b>. <code>readyState === 4 &amp;&amp; status === 200</code>일 때 응답을 사용한다(js18).</p>
+
+    <h3 class="sub">2-5. 실시간 통신 방식</h3>
+    <div class="tbl">
+        <table class="wide">
+            <thead><tr><th>방식</th><th>원리</th><th>연결</th><th>방향</th><th>특징</th><th>Flask 구현</th></tr></thead>
+            <tbody>
+            {% for r in d.REALTIME %}
+                <tr><td><b>{{ r.name }}</b></td><td>{{ r.how }}</td><td>{{ r.conn }}</td><td>{{ r.dir }}</td><td>{{ r.note }}</td><td>{{ r.flask }}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="grid-2">
+        <div class="card">
+            <h4>SSE 서버 <span class="tag-file">Flask</span></h4>
+            <pre class="code">{{ d.CODE.sse_server }}</pre>
+        </div>
+        <div class="card">
+            <h4>SSE 브라우저 <span class="tag-file">JavaScript</span></h4>
+            <pre class="code">{{ d.CODE.sse_client }}</pre>
+            <p class="caption">요청-응답 1회가 아니라, 응답 하나가 끝나지 않고 계속 이어진다. 이 페이지의 ④번 시계와 4-C 서버 로그가 이 방식이다.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ======================= 3. HTML 처리 방식 ======================= -->
+<section id="s3">
+    <h2><span class="num">3</span>HTML 처리 방식</h2>
+    <p class="section-lead">핵심 질문은 하나다. <b>HTML이 어디서 완성되는가?</b> 서버에서 완성되면 SSR, 브라우저에서 완성되면 CSR.</p>
+
+    <h3 class="sub">3-1. 네 가지 방식 비교</h3>
+    <div class="ways">
+    {% set side_label = {'static': '미리 완성', 'server': '서버에서 완성', 'browser': '브라우저에서 완성'} %}
+    {% for w in d.HTML_WAYS %}
+        <article class="card way">
+            <header>
+                <h4>{{ w.name }}</h4>
+                <span class="badge {{ w.side }}">{{ side_label[w.side] }}</span>
+            </header>
+            <dl>
+                <div><dt>완성 위치</dt><dd>{{ w.where }}</dd></div>
+                <div><dt>서버</dt><dd>{{ w.server }}</dd></div>
+                <div><dt>브라우저</dt><dd>{{ w.browser }}</dd></div>
+                <div><dt>화면 갱신</dt><dd>{{ w.refresh }}</dd></div>
+                <div><dt>장점</dt><dd>{{ w.pros }}</dd></div>
+                <div><dt>단점</dt><dd>{{ w.cons }}</dd></div>
+                <div><dt>실습</dt><dd><code>{{ w.ex }}</code></dd></div>
+            </dl>
+        </article>
+    {% endfor %}
+    </div>
+
+    <h3 class="sub">3-2. 같은 표, 세 가지 코드</h3>
+    <p>상품 표(sangdata)를 만든다고 하면 결과 HTML은 같아도 <b>만들어지는 곳</b>이 다르다.</p>
+    <div class="code-rows">
+        <div class="code-row">
+            <div class="code-meta">
+                <h4>CGI</h4><span class="badge server">서버 · print()</span>
+                <p>파이썬이 HTML 문자열을 한 줄씩 출력한다. 헤더와 빈 줄도 직접 써야 한다.</p>
+            </div>
+            <pre class="code">{{ d.CODE.cgi }}</pre>
+        </div>
+        <div class="code-row">
+            <div class="code-meta">
+                <h4>Jinja2 템플릿</h4><span class="badge server">서버 · render_template</span>
+                <p>HTML 파일에는 자리표시자만 두고, 값은 파이썬이 넘긴다. 브라우저에는 치환이 끝난 HTML만 간다.</p>
+            </div>
+            <pre class="code">{{ d.CODE.jinja }}</pre>
+        </div>
+        <div class="code-row">
+            <div class="code-meta">
+                <h4>JavaScript</h4><span class="badge browser">브라우저 · DOM</span>
+                <p>서버는 JSON만 주고, 브라우저가 문자열을 조립해 innerHTML에 넣는다.</p>
+            </div>
+            <pre class="code">{{ d.CODE.js }}</pre>
+        </div>
+    </div>
+
+    <h3 class="sub">3-3. 브라우저 안에서 일어나는 일</h3>
+    <ol class="pipeline">
+    {% for name, desc in d.RENDER_STEPS %}
+        <li><b>{{ name }}</b><span>{{ desc }}</span></li>
+    {% endfor %}
+    </ol>
+    <div class="grid-2">
+        <div class="card note">
+            <h4>&lt;script&gt;를 만나면 파싱이 멈춘다</h4>
+            <p>HTML을 위에서 아래로 읽다가 script를 만나면 먼저 실행한다. head에 둔 script가 body의 요소를 찾으려면
+                <code>window.onload</code>(js21)나 <code>defer</code>가 필요한 이유다.</p>
+        </div>
+        <div class="card note">
+            <h4>JS는 한 줄로 선다 (단일 스레드)</h4>
+            <p>화면 그리기와 JS 실행이 같은 메인 스레드를 쓴다. 오래 걸리는 동기 작업이 있으면 그동안 화면이 멈춘다.
+                그래서 통신은 비동기(<code>open(…, true)</code>, fetch)로 한다. <a href="#lab-b">4-B에서 직접 확인</a></p>
+        </div>
+    </div>
+</section>
+
+<!-- ======================= 4. 실시간 동작 확인 ======================= -->
+<section id="s4">
+    <h2><span class="num">4</span>실시간 동작 확인</h2>
+    <p class="section-lead">1~3장은 서버가 한 번 완성해서 보낸 내용이다. 여기부터는 페이지가 열려 있는 동안 브라우저와 서버가 계속 통신한다.
+        서버를 실행한 터미널의 로그와 함께 보면 양쪽이 같은 순간에 움직이는 것을 확인할 수 있다.</p>
+
+    <h3 class="sub" id="lab-a">4-A. 네 개의 시계: 누가, 언제 값을 갱신하나</h3>
+    <div class="card">
+        <figure class="flow">
+            <svg class="flow-svg" viewBox="0 0 720 200" role="img" aria-label="브라우저와 서버 사이를 오가는 요청, 응답, SSE 메시지를 실시간으로 표시">
+                <defs>
+                    <marker id="fa-up" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ah up"/></marker>
+                    <marker id="fa-down" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ah down"/></marker>
+                    <marker id="fa-sse" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ah sse"/></marker>
+                </defs>
+                <rect class="f-box" x="8" y="12" width="150" height="176" rx="14"/>
+                <text class="f-title" x="83" y="94" text-anchor="middle">브라우저</text>
+                <text class="f-sub" x="83" y="116" text-anchor="middle">fetch · EventSource</text>
+
+                <rect class="f-box" id="flow-server" x="562" y="12" width="150" height="176" rx="14"/>
+                <text class="f-title" x="637" y="94" text-anchor="middle">Flask 서버</text>
+                <text class="f-sub" id="flow-busy" x="637" y="116" text-anchor="middle">대기 중</text>
+
+                <line class="f-lane up" x1="170" y1="52" x2="548" y2="52" marker-end="url(#fa-up)"/>
+                <text class="f-label" x="359" y="40" text-anchor="middle">요청 (fetch · 폴링)</text>
+                <line class="f-lane down" x1="550" y1="102" x2="172" y2="102" marker-end="url(#fa-down)"/>
+                <text class="f-label" x="359" y="90" text-anchor="middle">응답</text>
+                <line class="f-lane sse" x1="550" y1="158" x2="172" y2="158" marker-end="url(#fa-sse)"/>
+                <text class="f-label" x="359" y="146" text-anchor="middle">SSE push · 연결 1개를 열어 둔 채 서버가 보냄</text>
+                <g id="flow-dots"></g>
+            </svg>
+            <figcaption>점의 이동 속도는 눈으로 보기 좋게 늦춘 것이다. 실제 걸린 시간은 아래 RTT와 4-B 타임라인의 숫자를 본다.</figcaption>
+        </figure>
+
+        <div class="clocks">
+            <article class="clock" data-series="ssr">
+                <h4><span class="k">①</span>SSR · 서버가 적어 넣은 값</h4>
+                <output class="clock-time" id="clk-ssr">{{ rendered_at.strftime('%H:%M:%S') }}.{{ '%03d' % (rendered_at.microsecond // 1000) }}</output>
+                <div class="age"><span class="age-bar" id="bar-ssr"></span></div>
+                <p class="clock-age">데이터 나이 <b id="age-ssr">-</b></p>
+                <p class="clock-desc">Jinja2가 렌더링하면서 HTML에 적은 시각. 새로고침 전에는 바뀌지 않는다.</p>
+            </article>
+            <article class="clock" data-series="browser">
+                <h4><span class="k">②</span>브라우저 시계 · JS</h4>
+                <output class="clock-time" id="clk-browser">--:--:--.---</output>
+                <div class="age"><span class="age-bar" id="bar-browser"></span></div>
+                <p class="clock-age">데이터 나이 <b id="age-browser">-</b></p>
+                <p class="clock-desc">requestAnimationFrame으로 브라우저가 스스로 갱신한다. 서버와 통신하지 않는다.</p>
+            </article>
+            <article class="clock" data-series="poll">
+                <h4><span class="k">③</span>서버 시계 · 폴링</h4>
+                <output class="clock-time" id="clk-poll">--:--:--.---</output>
+                <div class="age"><span class="age-bar" id="bar-poll"></span></div>
+                <p class="clock-age">데이터 나이 <b id="age-poll">-</b></p>
+                <p class="clock-desc">브라우저가 주기적으로 <code>/api/time</code>을 요청한다. 응답이 올 때만 바뀐다.</p>
+            </article>
+            <article class="clock" data-series="sse">
+                <h4><span class="k">④</span>서버 시계 · SSE</h4>
+                <output class="clock-time" id="clk-sse">--:--:--.---</output>
+                <div class="age"><span class="age-bar" id="bar-sse"></span></div>
+                <p class="clock-age">데이터 나이 <b id="age-sse">-</b></p>
+                <p class="clock-desc">열어 둔 연결로 서버가 1초마다 보낸다. 브라우저는 요청하지 않는다.</p>
+                <pre class="sse-raw" id="sse-raw">event: …</pre>
+            </article>
+        </div>
+        <p class="caption">데이터 나이 = 지금 시각 − 그 값이 만들어진 시각. 0에 가까울수록 실시간이다. ①은 계속 늘고, ③·④는 갱신될 때마다 0으로 돌아간다.</p>
+
+        <div class="controls">
+            <label>폴링 간격
+                <select id="poll-interval">
+                    <option value="0">끄기</option>
+                    <option value="500">0.5초</option>
+                    <option value="1000" selected>1초</option>
+                    <option value="3000">3초</option>
+                </select>
+            </label>
+            <span class="hint">폴링을 끄면 ③번 시계가 멈추고 데이터 나이가 계속 늘어난다.</span>
+        </div>
+
+        <dl class="metrics">
+            <div><dt>최근 왕복시간 (RTT)</dt><dd id="m-rtt">-</dd></div>
+            <div><dt>서버 − 브라우저 시계 차이</dt><dd id="m-offset">-</dd></div>
+            <div><dt>폴링 요청</dt><dd id="m-polls">0</dd></div>
+            <div><dt>SSE 받은 메시지</dt><dd id="m-sse">0</dd></div>
+            <div><dt>SSE 연결 수 (서버 기준)</dt><dd id="m-clients">-</dd></div>
+            <div><dt>서버 가동 시간</dt><dd id="m-uptime">-</dd></div>
+        </dl>
+    </div>
+
+    <h3 class="sub" id="lab-b">4-B. 요청 실험: 서버 처리 시간과 브라우저 멈춤</h3>
+    <div class="card">
+        <div class="btn-row">
+            <button class="btn" type="button" data-exp="get">GET /api/time</button>
+            <button class="btn" type="button" data-exp="post">POST /api/echo</button>
+            <button class="btn primary" type="button" data-exp="async">비동기 fetch · 서버 1.5초</button>
+            <button class="btn danger" type="button" data-exp="sync">동기 XHR · 서버 1.5초</button>
+            <button class="btn" type="button" data-exp="parallel">동시 요청 3개 · 각 1초</button>
+        </div>
+        <div class="heartbeat">
+            <div class="hb-track" aria-hidden="true"><span class="hb-dot" id="hb-dot"></span></div>
+            <p>메인 스레드 하트비트 · 마지막 실험 중 최대 멈춤 <b id="hb-max">-</b></p>
+        </div>
+        <div id="waterfall" class="waterfall">
+            <p class="empty">버튼을 눌러 요청을 보내면 요청 → 서버 처리 → 응답 구간이 여기에 그려진다.</p>
+        </div>
+        <div class="legend">
+            <span class="lg up">요청 (브라우저 → 서버)</span>
+            <span class="lg server">서버 처리</span>
+            <span class="lg down">응답 (서버 → 브라우저)</span>
+        </div>
+        <ul class="notes">
+            <li><b>비동기</b>: 서버가 1.5초 동안 일해도 하트비트 점과 ② 브라우저 시계는 계속 움직인다.</li>
+            <li><b>동기 XHR</b>: 응답이 올 때까지 메인 스레드가 멈춰 점·시계·버튼이 모두 얼어붙는다. 실무에서 쓰면 안 되는 방식이고 비교용이다.</li>
+            <li><b>동시 요청 3개</b>: 서버가 스레드를 나눠 동시에 처리해 3초가 아닌 1초 남짓에 끝난다. 처리한 스레드 이름이 서로 다르다.</li>
+        </ul>
+    </div>
+
+    <h3 class="sub" id="lab-c">4-C. 서버 로그: SSE로 실시간 전달</h3>
+    <div class="card">
+        <div class="log-head">
+            <label class="check"><input type="checkbox" id="show-poll"> 폴링 요청도 표시</label>
+            <span class="muted">숨긴 폴링 <b id="hidden-polls">0</b>건 · 서버 누적 요청 <b id="log-total">-</b>건</span>
+        </div>
+        <div class="log-wrap">
+            <table class="log">
+                <thead><tr><th>#</th><th>서버 시각</th><th>메서드</th><th>경로</th><th>상태</th><th>처리</th><th>클라이언트</th></tr></thead>
+                <tbody id="log-body"><tr><td colspan="7" class="empty">SSE 연결을 기다리는 중…</td></tr></tbody>
+            </table>
+        </div>
+        <p class="hint">서버의 <code>after_request</code>가 요청을 처리할 때마다 SSE로 로그를 밀어준다. 이 페이지를 탭 두 개로 열고 한쪽에서 4-B 버튼을 누르면 다른 탭의 로그에도 바로 나타난다.
+            같은 와이파이의 휴대폰에서 <code>http://(내 IP):{{ server.port }}</code>으로 접속하면 다른 클라이언트 주소가 찍힌다.</p>
+    </div>
+
+    <h3 class="sub" id="lab-d">4-D. SSR vs CSR: 폼 전송과 fetch 비교</h3>
+    <div class="grid-2">
+        <article class="card">
+            <h4>A. 폼 전송 → 서버가 HTML 완성 <span class="badge server">SSR</span></h4>
+            <form method="get" action="{{ url_for('report') }}#lab-d" class="inline-form">
+                <input name="who" value="{{ who }}" placeholder="이름 입력" maxlength="30" aria-label="이름">
+                <button class="btn primary">GET으로 전송</button>
+            </form>
+            <p id="ssr-result" class="result">{% if who %}서버가 만든 문장: 안녕하세요, <b>{{ who }}</b>님! (렌더링 #{{ render_no }} · {{ rendered_at.strftime('%H:%M:%S') }}){% else %}아직 보낸 이름이 없다. (렌더링 #{{ render_no }}){% endif %}</p>
+            <ul class="notes">
+                <li>주소창이 <code>/?who=…</code>로 바뀐다. GET은 쿼리스트링으로 보낸다.</li>
+                <li>페이지 전체를 다시 받는다. ① SSR 시계와 렌더링 번호가 바뀌고 SSE도 다시 연결된다.</li>
+                <li><code>&lt;b&gt;굵게&lt;/b&gt;</code>를 입력해도 Jinja2가 자동 이스케이프해서 글자로만 보인다.</li>
+            </ul>
+        </article>
+        <article class="card">
+            <h4>B. fetch POST → 브라우저가 HTML 완성 <span class="badge browser">CSR</span></h4>
+            <form id="csr-form" class="inline-form">
+                <input id="csr-text" placeholder="아무 문장" maxlength="100" aria-label="보낼 문장">
+                <button class="btn primary">POST로 전송</button>
+            </form>
+            <div id="csr-result" class="result"></div>
+            <ul class="notes">
+                <li>주소창은 그대로이고 이 상자만 바뀐다. 렌더링 번호 #{{ render_no }}도 그대로다.</li>
+                <li>서버는 JSON만 보내고, HTML은 JS가 템플릿 리터럴로 만든다.</li>
+                <li>사용자 입력은 escape한 뒤 innerHTML에 넣는다 (XSS 방지).</li>
+            </ul>
+        </article>
+    </div>
+    <div class="card">
+        <div class="card-head">
+            <h4>서버가 보낸 원본 HTML vs 현재 DOM</h4>
+            <button class="btn" id="btn-source" type="button">비교하기</button>
+        </div>
+        <div class="grid-2 tight">
+            <div><h5>서버 응답 원본 (JS 실행 전)</h5><pre class="code" id="raw-html">-</pre></div>
+            <div><h5>현재 DOM (JS 실행 후)</h5><pre class="code" id="live-dom">-</pre></div>
+        </div>
+        <p class="caption">원본에는 Jinja 문법(<code>{% raw %}{{ who }}{% endraw %}</code>)이 없다. 서버에서 이미 값으로 바뀌었기 때문이다. 원본의 <code>#csr-result</code>는 비어 있고, 내용은 나중에 브라우저의 JS가 채운 것이다.
+            원본을 다시 받아오느라 요청이 한 번 더 가므로 서버의 렌더링 번호도 1 늘어난다.</p>
+    </div>
+</section>
+
+<!-- ======================= 5. 핵심 요약 ======================= -->
+<section id="s5">
+    <h2><span class="num">5</span>핵심 요약</h2>
+    <ol class="summary">
+        <li><b>구조</b><span>브라우저(클라이언트)가 요청하고 서버가 응답한다. 브라우저는 HTML·CSS·JS만 실행하고, 파이썬은 서버에서만 실행된다.</span></li>
+        <li><b>통신</b><span>TCP 소켓 위에 HTTP 형식(요청줄·헤더·본문 / 상태줄·헤더·본문)을 얹어 대화한다. 조회는 GET(쿼리스트링), 전송·변경은 POST(본문).</span></li>
+        <li><b>무상태</b><span>HTTP는 요청이 있어야 응답한다. 서버가 먼저 보내려면 폴링(흉내), SSE(서버 → 브라우저), WebSocket(양방향)을 쓴다.</span></li>
+        <li><b>HTML 처리</b><span>정적 파일 → CGI print → Jinja2 템플릿(SSR)은 서버에서 HTML을 완성하고, CSR은 JSON을 받아 JS가 브라우저에서 DOM을 고친다.</span></li>
+        <li><b>비동기</b><span>브라우저는 메인 스레드 하나로 화면과 JS를 처리한다. 통신을 비동기로 해야 서버를 기다리는 동안 화면이 멈추지 않는다.</span></li>
+        <li><b>서버 선택</b><span><code>app.run()</code>은 개발용이다. 운영에서는 waitress · gunicorn(+ Nginx)을 쓴다.</span></li>
+    </ol>
+    <p class="measured">이 브라우저에서 측정한 값 · 최소 RTT <b id="sum-rtt">-</b> · 폴링 요청 <b id="sum-polls">0</b>회 vs SSE 메시지 <b id="sum-sse">0</b>개(연결 1개)</p>
+</section>
+
+</main>
+
+<footer class="footer">
+    <div class="wrap">이 보고서는 {{ rendered_at.strftime('%Y-%m-%d %H:%M:%S') }}에 Flask 서버({{ server.host }})가 렌더링했다 · pro.x</div>
+</footer>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // 서버(Jinja2)가 만든 값을 브라우저 JS로 넘기기: tojson 필터가 JS 객체 문법으로 출력한다
+    window.REPORT = {{ js_data|tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/report.js') }}"></script>
+{% endblock %}
