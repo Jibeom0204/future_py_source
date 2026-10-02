@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title if title else "장바구나 샘플"}}</title>
+</head>
+<body>
+    <nav> <!--레이아웃 페이지. 모든 페이지에 나옴-->
+        <a href="/">상품목록</a> |<a href="/cart">장바구니</a> <!--url에 /가 들어오면 상품목록 /cart가 들어오면 장바구니-->
+    </nav>
+    <hr><hr>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

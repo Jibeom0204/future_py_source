@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<h2 style="color:cadetblue">상품목록</h2>
+<ul>
+    {%for p in products %} <!--안에 내용는 .py에서 작성하고 넘겨줌. 서브사이드 렌더링-->
+    <li>
+        {{p.name}} ({{p.price}}원)
+        <a href="/add/{{p.id}}">[장바구니에 담기]</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

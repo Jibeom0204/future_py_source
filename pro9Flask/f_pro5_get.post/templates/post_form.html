@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>POST 방식 처리</title>
+    <script>
+        // DOMContentLoaded: HTML을 다 읽은 뒤 발생하는 이벤트 (대소문자 정확히)
+        // 인자1: 이벤트 이름(문자열), 인자2: 이벤트 발생 시 실행할 함수
+        document.addEventListener("DOMContentLoaded", () => {
+
+            // const: 다시 대입하지 않을 값에 사용 (form, btn은 바뀔 일이 없어서 선택)
+            // querySelector: CSS 선택자로 첫 번째 일치 요소를 찾음
+            // form[name='postform'] = "form 태그 중 name 속성이 postform인 것" (속성 선택자)
+            const form = document.querySelector("form[name='postform']");
+            const btn = document.querySelector("#btnSend"); // #은 id 선택자
+
+            btn.addEventListener("click", () => {
+                // requestSubmit(): 제출 이벤트(submit)를 발생시키고 검증을 거친 뒤 전송
+                // (submit()은 이벤트를 발생시키지 않아 아래 검증이 무시됨)
+                form.requestSubmit();
+            });
+
+            // event: 이벤트 정보가 담긴 '객체'. 함수가 아님. 브라우저가 자동으로 넘겨줌
+            form.addEventListener("submit", (event) => {
+                const name = document.querySelector("#username").value.trim(); // trim: 앞뒤 공백 제거
+                const email = document.querySelector("#email").value.trim();
+
+                if (!name) {
+                    alert("이름입력");
+                    event.preventDefault(); // 기본 동작(폼 전송) 취소
+                    return;
+                }
+
+                // includes: 문자열에 특정 문자가 포함됐는지 true/false 반환
+                if (!email || !email.includes("@")) {
+                    alert("올바른 이메일 입력");
+                    event.preventDefault();
+                    return;
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h3>POST 방식 처리</h3>
+    <form action="/post_result" method="post" name="postform">
+        이름: <input type="text" name="username" id="username" value="손오공"><br>
+        이메일: <input type="text" name="email" id="email" value="abcd@efg.com"><br>
+        <input type="button" value="전송" id="btnSend">
+    </form>
+</body>
+</html>

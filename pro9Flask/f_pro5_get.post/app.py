@@ -18,6 +18,16 @@ def get_result():
     age=age+"살"
     return render_template("get.result.html",name=name,age=age);
 
+@app.route("/post_form")
+def post_form():
+    return render_template("post_form.html");
+
+@app.route("/post_result", methods=["POST"])
+def post_result():
+    name=request.form.get("username") # get 방식으로 requset 사용하는 방법 request.arg.get 
+    email=request.form.get("email") # post 방식으로 넘어오면 request.form.get
+    return render_template("post.result.html",p_name=name,p_email=email);
+
 
 
 if __name__=='__main__':
