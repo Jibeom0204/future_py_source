@@ -7,5 +7,45 @@
 </head>
 <body>
     <h2>상품 정보</h2>
+    {% if messages %} <!--flash 메세지 관련 출력-->
+    <ul>
+        {% for m in messages %} <!--messages의 담긴 여러 메세지를 for 반복으로 출력-->
+        <li>{{m}}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+ <!--   <p><a href="{{'add'}}">[상품 추가]</a></p>      /add_form: 이거는 요청명 /// py 코드와 인자,이름 비교해라! -->
+<p><a href="{{url_for('add_form')}}">[상품 추가]</a></p>          <!--url_for를 사용하여 서버의 add_form 함수를 부름-->
+<table border="1">
+    <tr>
+        <th>코드</th><th>상픔명</th><th>수량</th><th>단가</th><th>관리</th>
+    </tr>
+    {%for r in rows %}
+    <tr>
+        <td>{{r.code}}</td>
+        <td>{{r.sang}}</td>
+        <td>{{r.su}}</td>
+        <td>{{r.dan}}</td>
+        <td>
+            <!--<a href="/edit?code=1"></a>--> <!--요청방법 1:request.args.get으로 받는 방법-->
+            
+            <!-- 예시: <a href="/edit/1/ /edit/2/ /edit/3/..">--> <!--요청방법 2: @app.get("/edit/<int:code>")으로 받는 방법-->
+            <a href="{{url_for('edit_form', code=r.code)}}">수정</a> <!-- 이 두 줄은 같음. 어떤 방식을 써도 상관이 없다.-->
+        
+                <!-- edit_form,delete_row는 함수. 이 코드들은 함수를 호출하는거다
+                 따라서 .py에 함수가 존재하지 않으면 호출할 수 없어 에러가 뜬다.-->
+
+         / <!-- 삭제는 post 방식: !!!! post 방식은 form 태그!!!!-->
+         <form action="{{url_for('delete_row', code=r.code)}}" method="post"
+         style="display: inline;"
+         onsubmit="return confirm('ㄹㅇ 삭제할거임?')"> <!--onsubmit="return confirm() : 작동 확인 명령어-->
+            <button type="submit">삭제</button>
+         </form>
+        </td>
+
+    </tr>
+    {% endfor %}
+</table>
 </body>
 </html>
