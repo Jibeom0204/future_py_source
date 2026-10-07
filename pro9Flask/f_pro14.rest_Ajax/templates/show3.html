@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>document</title>
+    <h2>FLast REST API + Ajax(fetch) :  GHT</h2>
+    <!--<link rel="stylesheet href=/static/css/style.css">-->
+    <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+    <script src="{{url_for('static', filename='js/app.js')}}" defer></script>
+</head>
+<body>
+    <button id="loadBtn">상품 자료 읽기(fetch방식)</button>
+    <table id="resultTable">
+    </table>
+
+    <script>
+        document.getElementById("loadBtn").addEventListener("click",function(){
+            fetch("/api/sangdata")
+            .then(response=>{
+                if(!response.ok){ //response가 ok가 아니라면
+                throw new Error("서버 오류")}; //에러전달
+                return response.json();
+            })
+
+            .then(data =>{
+                const table =document.getElementById("resultTable");
+
+                table.innerHTML="";
+
+                if (data.length===0){
+                    table.innerHTML="<tr><td>자료 없음</td></tr>"
+                    return;
+                }
+                
+                let headerRow="<tr>";
+                    Object.keys(data[0]).forEach(key =>{
+                        headerRow+=`<th>${key}</th>;`
+                    })
+                headerRow+="</tr>";
+                table.innerHTML=headerRow;
+
+                //자료채우기
+                data.forEach(row => {
+                    let rowHtml ="<tr>"
+                        Object.values(row).forEach(value=>{
+                            rowHtml+=`<td>${value}</td>`;
+                        })
+                    rowHtml+="</tr>"
+                    table.innerHTML+=rowHtml
+                });
+            })
+        })
+    </script>
+</body>
+</html>

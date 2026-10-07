@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{padding: 15px;}
+        .menu{
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 200px;
+        }
+        .menu a{
+            text-decoration: none;
+            padding: 5px;
+            border: 1px solid#333;
+            border-radius: 4px;
+            text-align: center;
+            background-color: #f2f2f2;
+            color: rgb(0, 0, 0);
+        }
+
+        .menu a:hover {background-color:aqua; color: brown;} 
+        
+    </style>
+</head>
+<body>
+    <h2>Ajax 호출 방식 모음</h2>
+    <div class="menu">
+        <a href="/legacy">legacy 방식</a><br>
+        <a href="/async">async 방식</a><br>
+        <a href="/fetch">fetch 방식</a><br>
+        <a href="/axios">axios 방식</a><br>
+    </div>
+</body>
+</html>
