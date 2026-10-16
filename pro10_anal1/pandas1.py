@@ -165,3 +165,20 @@ print("행 단위 정렬: \n",frame2.sort_index(axis=0,ascending=False),'\n') # 
 print("열 단위 정렬: \n",frame2.sort_index(axis=1,ascending=False),'\n') # 열 단위 정렬
 
 print("순위 출력: \n",frame2.rank(axis=0),'\n') # 순위 매김
+
+counts = frame2['juso'].value_counts()
+print("counts 출력: \n",counts,'\n')
+
+# 문자열 자르기
+data={
+    'juso':['서초구 서초2동','강남구 역삼동','강남구 대치동'],
+    'inwon': [23,25,15]
+}
+fr=pd.DataFrame(data)
+print("자르기 전 원본 데이터 fr: ;\n",fr,'\n')
+
+result1=Series(x.split()[0] for x in fr.juso)
+result2=Series(x.split()[1] for x in fr.juso)
+print("공백기준으로 문자열 인덱스 구분됨('구'로구분) result1:\n",result1,'\n')
+print("공백기준으로 문자열 인덱스 구분됨('동'으로구분)result2:\n",result2,'\n')
+print("result1.value_counts()\n",result1.value_counts(),'\n')
