@@ -48,8 +48,8 @@ print('k' in obj2)
 
 print('=======================================')
 print('\n 파이썬 dict 자료를 Series 객체로 생성')
-names ={'mouse':5000,'keyboard':35000,'monitor':55000}
-obj3=Series(names)
+names ={'mouse':5000,'keyboard':35000,'monitor':55000} # 이거는 파이썬 dict
+obj3=Series(names) #obj3라는 Series 객체에 dict를 넣어 변환
 print("obj3값과 타입: \n",obj3, type(obj3),'\n')
 #   [key]        [value]
 #  mouse        5000

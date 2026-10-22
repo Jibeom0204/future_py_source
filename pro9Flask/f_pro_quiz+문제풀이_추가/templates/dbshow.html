@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>직원 자료, 직급별 연봉 통계</h2>
+    <a href="/">메인 페이지</a>
+    <br><br>
+    <!--
+    <form action="/db" method="get">
+        <label for="dept">부서명:</label>
+        <input type="text" name="dept" placeholder="예)총무부">
+        <button type="submit">조회</button>
+    </form>
+    -->
+    <hr>
+    <h3>직원 목록</h3>
+    {{jikwondata | safe}}
+
+    <h3>직급별 연봉 총계</h3>
+    {{paydata | safe}}
+
+    <h3>부서별 연봉 통계</h3>
+    {{ deptdata | safe }}
+
+    <h3>부서별 연봉 그래프</h3>
+    <img src="data:image/png;base64,{{ chart }}" alt="부서별 연봉 그래프">
+ 
+</body>
+</html>
