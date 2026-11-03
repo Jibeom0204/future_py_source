@@ -11,7 +11,7 @@ print(score_iq.head(3))
 print(score_iq.info())
 x = score_iq.iq
 y = score_iq.score
-print(x[:3])
+print(x[:3]) 
 print(y[:3])
 
 print('상관 계수 : ', np.corrcoef(x, y)[0, 1])   # 0.88222

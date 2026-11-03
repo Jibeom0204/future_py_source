@@ -20,6 +20,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import koreanize_matplotlib
 from sklearn.metrics import r2_score
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures # 다항회귀식
@@ -45,10 +46,10 @@ quad=PolynomialFeatures(degree=2)
 cubic=PolynomialFeatures(degree=3)
 # PolynomialFeatures: 기존 데이터의 특성(Feature)들을 제곱, 세제곱하거나 서로 곱해서 새로운 다항식 특성들을 만들어내는 전처리(Preprocessing) 도구
 
-# 선형 회귀 모델은 기본적으로 $y = w_1 x + b$ 와 같은 직선 형태만 학습할 수 있습니다.
-# 하지만 실제 데이터는 아래 그림처럼 단순 직선이 아니라 곡선(U자 형태, S자 형태 등) 형태로 분포하는 경우가 많습니다.
+# 선형 회귀 모델은 기본적으로 $y = w_1 x + b$ 와 같은 직선 형태만 학습할 수 있음
+# 하지만 실제 데이터는 아래 그림처럼 단순 직선이 아니라 곡선(U자 형태, S자 형태 등) 형태로 분포하는 경우가 다수.
 # PolynomialFeatures를 사용해 $x^2, x^3$ 등의 특성을 만들어 입력하면,
-# 선형 모델의 식 자체는 그대로 유지하면서도 실제 예측 결과는 곡선 형태로 데이터에 맞춰지는 효과를 얻을 수 있습니다.
+# 선형 모델의 식 자체는 그대로 유지하면서도 실제 예측 결과는 곡선 형태로 데이터에 맞춰지는 효과를 얻음.
 
 x_quad=quad.fit_transform(x)
 x_cubic=cubic.fit_transform(x)
@@ -57,18 +58,33 @@ print(x_cubic[:3])
 
 # 단순회귀
 model.fit(x,y)
-x_fit=np.arange(x.min(),x.max(),1)[:,np.newaxis]
-y_lin_fit=model.predict(x_fit) # 그래프에 표시용
+x_fit=np.arange(x.min(),x.max(),1)[:,np.newaxis] # x의 최소값, 최대값을 범위로 1씩 증가하는 배열 생성. np.newaxis: 1차원 배열을 2차원으로 바꿔줌
+y_lin_fit=model.predict(x_fit) # 그래프에 표시용 
 #print('y_lin_fit : ',y_lin_fit)
 
 model_r2=r2_score(y,model.predict(x))
-print('단순회귀 model_r2 출력',model_r2)
+print('단순회귀 model_r2 출력',model_r2)#0.54414
 
 
 # 다항(2차)
 model.fit(x_quad,y)
 y_quad_fit=model.predict(quad.fit_transform(x_fit))
-
 q_r2=r2_score(y,model.predict(x_quad))
-print('다항회귀 q_r2 출력',q_r2)
+print('다항회귀 q_r2 출력',q_r2) #0.64071
+# R²결정계수: 모델이 평균값을 기준으로 얼마나 잘 설명하는지 나타내는 지표. 0~1 사이의 값. 1에 가까울수록 모델이 데이터를 잘 설명함.
+
 # 다항(3차)
+model.fit(x_cubic,y)
+y_cubic_fit=model.predict(cubic.fit_transform(x_fit))
+c_r2=r2_score(y,model.predict(x_cubic))
+print('다항회귀 c_r2 출력',c_r2) #0.65784
+
+# 시각화
+plt.scatter(x,y, label='초기 데이터')
+plt.plot(x_fit,y_lin_fit, linestyle=':',label='Linear fit(d=1), $R^2=%.2f$' %model_r2, lw=3,c='b')
+plt.plot(x_fit,y_quad_fit, linestyle='-',label='Quadratic fit(d=2), $R^2=%.2f$' %q_r2, lw=3,c='r')
+plt.plot(x_fit,y_cubic_fit, linestyle='--',label='Cubic fit(d=3), $R^2=%.2f$' %c_r2, lw=3,c='k')
+plt.xlabel('저소득층 인구 비율')
+plt.ylabel('주택가격')
+plt.legend()
+plt.show()

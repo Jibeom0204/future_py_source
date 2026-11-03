@@ -6,7 +6,7 @@
 # print(sum([1,2,3]))
 # print('1부터 100까지의 합: ',sum(range(1,100)))
 # print(8, bin(8))
-# print(eval('4.5'))
+print(eval('4+5'))
 # print(round(1.2),round(1.6))   #반올림
 
 # import math
