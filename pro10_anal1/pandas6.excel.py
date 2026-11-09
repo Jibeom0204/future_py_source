@@ -11,8 +11,10 @@ print(df)
 # DataFrame 저장
 # 클립보드로 저장
 df.to_clipboard()  # 메모장 등으로 확인
-print(df.to_html())
-print(df.to_json())
+print(df.to_html()) # 데이터 프레임을 html 형식으로 변환
+print(df.to_json()) # 데이터 프레임을 json(키:밸류)형식으로 전환
+# JSON은 데이터를 주고받기 위한 문자열(Text) 형식이고,
+# 파이썬 딕셔너리(Dict)는 파이썬 메모리에서 데이터를 다루는 데이터 구조(자료형)
 
 df.to_csv('result1.csv', sep=',')
 df.to_csv('result2.csv', sep=',', index=False)

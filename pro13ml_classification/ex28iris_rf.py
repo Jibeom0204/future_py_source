@@ -9,6 +9,9 @@ from sklearn.metrics import accuracy_score,confusion_matrix
 from sklearn.preprocessing import StandardScaler,MinMaxScaler # 표준화 정규화
 from sklearn.linear_model import LogisticRegression
 # LogisticRegression : 이항 분류 뿐 아니라 다중 클래스를 지원함
+
+import xgboost as xgb
+
 iris = datasets.load_iris()
 print(iris.keys())
 print(iris.target)
