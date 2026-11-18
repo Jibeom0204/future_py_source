@@ -38,9 +38,7 @@ print('\n==========모델 작성 방법1:  LinearRegression 사용하여 모델 
 from sklearn.linear_model import LinearRegression # 파이썬 제공 모듈
 model=LinearRegression()
 fit_model= model.fit(x,y) # 내부에서 아래와 같은 작업을 진행
-# 1) 독립변수(x)와 종속변수(y)를 입력 받음
-# 2) 예측값과 실제값 사이의 오차제곱합이 최소가 되도록 계산
-# 3) 최적의 회귀계수(기울기, 절편)를 구함
+# 1) 독 eh구함
 # 4) 계산된 계수를 모델에 저장
 # 단순 선형회귀 모델에서는 y=mx+b와 같은 단순한 형태의 수식을 가진 모델이 만들어진다.
 # 참고: LinerRegression은 신경망처럼 반복학습을 통해 가중치를 갱신하는 것이 아니라 연산을 통해 작성됨

@@ -25,7 +25,7 @@ print('parameters : ', model.params)
 # Intercept    0.778858   (bias)
 # 적절성        0.739276  (weight, slope)
 print('R-squared : ', model.rsquared)   # 0.58806   <-- 1에 가까우면 좋음. 너무 가까우면 기형모델이 됨
-print('p-value : ', model.pvalues)      # 2.235345e-52
+print('p-value : ', model.pvalues)      # 2.235345e-52. 유의 확률. 귀무가설이 참이라고 할 때, 현재 관측된 데이터가 우연일 확률
 print('예측값:', model.predict()[:5])    # [3.7359 2.9966 3.7359 2.2574 2.2574]
 print('실제값:', df.만족도[:5].values)   # [3 2 4 2 2]
 
